@@ -2,14 +2,14 @@
 using MongoDB.Bson.Serialization.Attributes;
 namespace ControleEstoque.Api.Models
 {
-  public class User
+    public class User
     {
         [BsonId]
         [BsonRepresentation(BsonType.Int32)]
-        public required string Id { get; set; }
-     public required string Nome { get; set; }
-     public required string Email { get; set; }
-     public required string Tipo { get; set; }
-     public required bool Status { get; set; } // "bool" é ótimo para Ativo/Inativo
+        public string? Id { get; set; }
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string Tipo { get; set; }
+        public bool Status { get; set; } // "bool" é ótimo para Ativo/Inativo
     }
 }

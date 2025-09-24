@@ -8,11 +8,11 @@ namespace ControleEstoque.Api.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
 
-        public required string Id { get; set; }
-        public required string Nome { get; set; }
-        public required int Quantidade { get; set; }
-        public required string Tipo { get; set; }
-        public required decimal Preco { get; set; }
+        public string? Id { get; set; }
+        public string Nome { get; set; }
+        public int Quantidade { get; set; }
+        public string Tipo { get; set; }
+        public decimal Preco { get; set; }
 
         public string Status
         {

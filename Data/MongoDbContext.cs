@@ -1,6 +1,8 @@
 ﻿using ControleEstoque.Api.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using MongoDB.Bson;
+
 namespace ControleEstoque.Api.Data
 {
     public class MongoDbContext
@@ -9,7 +11,15 @@ namespace ControleEstoque.Api.Data
 
         public MongoDbContext(IOptions<MongoDbSettings> settings)
         {
-            var client = new MongoClient(settings.Value.ConnectionString);
+            // Transforma a connection string em configurações que podemos modificar
+            var mongoUrl = new MongoUrl(settings.Value.ConnectionString);
+            var clientSettings = MongoClientSettings.FromUrl(mongoUrl);
+
+            // Esta é a configuração chave que resolve o problema
+            clientSettings.SslSettings = new SslSettings() { EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12 };
+
+            // Cria o cliente com as novas configurações
+            var client = new MongoClient(clientSettings);
             _database = client.GetDatabase(settings.Value.DatabaseName);
         }
 

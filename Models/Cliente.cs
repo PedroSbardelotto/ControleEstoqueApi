@@ -6,10 +6,10 @@ namespace ControleEstoque.Api.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public required string Id { get; set; }
-        public required string Nome { get; set; }
-        public required string CNPJ { get; set; }
-        public required string Email { get; set; }
-        public required string Endereco { get; set; }
+        public string? Id { get; set; }
+        public string Nome { get; set; }
+        public string CNPJ { get; set; }
+        public string Email { get; set; }
+        public string Endereco { get; set; }
     }
 }

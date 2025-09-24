@@ -6,9 +6,9 @@ namespace ControleEstoque.Api.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public required string Id { get; set; }
-        public required string NomeProduto { get; set; }
-        public required int QuantidadeProduto { get; set; }
-        public required string NomeCliente { get; set; }
+        public string? Id { get; set; }
+        public string NomeProduto { get; set; }
+        public int QuantidadeProduto { get; set; }
+        public string NomeCliente { get; set; }
     }
 }
