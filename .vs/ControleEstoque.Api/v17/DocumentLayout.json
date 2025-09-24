@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\home\\source\\repos\\controleestoque.api\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\home\\source\\repos\\controleestoque.api\\models\\pedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:models\\pedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -26,11 +30,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Produto.cs",
               "DocumentMoniker": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\Models\\Produto.cs",
               "RelativeDocumentMoniker": "Models\\Produto.cs",
@@ -39,12 +43,11 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-24T00:09:30.923Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\Models\\User.cs",
               "RelativeDocumentMoniker": "Models\\User.cs",
@@ -53,7 +56,19 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-24T00:09:31.735Z",
-              "IsPinned": true,
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "README.md",
+              "DocumentMoniker": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\README.md",
+              "RelativeDocumentMoniker": "README.md",
+              "ToolTip": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\README.md",
+              "RelativeToolTip": "README.md",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAqwHAAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-09-24T00:38:51.049Z",
               "EditorCaption": ""
             },
             {
@@ -66,7 +81,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Pedido.cs",
               "DocumentMoniker": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\Models\\Pedido.cs",
               "RelativeDocumentMoniker": "Models\\Pedido.cs",
@@ -79,7 +94,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Cliente.cs",
               "DocumentMoniker": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\Models\\Cliente.cs",
               "RelativeDocumentMoniker": "Models\\Cliente.cs",
@@ -87,8 +102,7 @@
               "RelativeToolTip": "Models\\Cliente.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-24T00:09:29.773Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-24T00:09:29.773Z"
             }
           ]
         }
