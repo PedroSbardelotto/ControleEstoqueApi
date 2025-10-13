@@ -687,13 +687,6 @@
   "components": {
     "schemas": {
       "Cliente": {
-        "required": [
-          "cnpj",
-          "email",
-          "endereco",
-          "id",
-          "nome"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -720,12 +713,6 @@
         "additionalProperties": false
       },
       "Pedido": {
-        "required": [
-          "id",
-          "nomeCliente",
-          "nomeProduto",
-          "quantidadeProduto"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -779,13 +766,6 @@
         "additionalProperties": false
       },
       "User": {
-        "required": [
-          "email",
-          "id",
-          "nome",
-          "status",
-          "tipo"
-        ],
         "type": "object",
         "properties": {
           "id": {

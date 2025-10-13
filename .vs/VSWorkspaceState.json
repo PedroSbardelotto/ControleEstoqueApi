@@ -1,10 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\Controllers",
-    "\\Data",
-    "\\Migrations",
-    "\\Models"
+    ""
   ],
+  "SelectedNode": "\\ControleEstoque.Api.sln",
   "PreviewInSolutionExplorer": false
 }

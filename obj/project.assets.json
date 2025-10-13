@@ -5665,23 +5665,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Home\\.nuget\\packages\\": {},
+    "C:\\Users\\55519\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\ControleEstoque.Api.csproj",
+      "projectUniqueName": "C:\\Users\\55519\\Source\\Repos\\ControleEstoqueApi\\ControleEstoque.Api.csproj",
       "projectName": "ControleEstoque.Api",
-      "projectPath": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\ControleEstoque.Api.csproj",
-      "packagesPath": "C:\\Users\\Home\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\obj\\",
+      "projectPath": "C:\\Users\\55519\\Source\\Repos\\ControleEstoqueApi\\ControleEstoque.Api.csproj",
+      "packagesPath": "C:\\Users\\55519\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\55519\\Source\\Repos\\ControleEstoqueApi\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Home\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\55519\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -5690,6 +5690,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -5760,7 +5761,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
