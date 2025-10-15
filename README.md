@@ -1,113 +1,119 @@
-# API de Controle de Estoque
+Ôªø# API de Controle de Estoque
 
-Esta È uma API RESTful desenvolvida em ASP.NET para gerenciar um sistema de controle de estoque. Ela permite operaÁıes CRUD (Criar, Ler, Atualizar, Deletar) para recursos como Produtos, Clientes, Usu·rios e Pedidos, utilizando um banco de dados MongoDB.
+Esta √© uma API RESTful desenvolvida em ASP.NET para gerenciar um sistema de controle de estoque. A API utiliza autentica√ß√£o via JSON Web Tokens (JWT) para proteger seus endpoints.
 
-## PrÈ-requisitos
+Ela permite opera√ß√µes CRUD (Criar, Ler, Atualizar, Deletar) para recursos como Produtos, Clientes, Usu√°rios e Pedidos, utilizando um banco de dados MongoDB.
 
-Para rodar este projeto localmente, vocÍ precisar· ter as seguintes ferramentas instaladas:
-* [.NET SDK](https://dotnet.microsoft.com/download) (vers„o 8.0 ou superior).
+## Pr√©-requisitos
+
+Para rodar este projeto localmente, voc√™ precisar√° ter as seguintes ferramentas instaladas:
+* [.NET SDK](https://dotnet.microsoft.com/download) (vers√£o 8.0 ou superior).
 * [Git](https://git-scm.com/downloads).
-* Um editor de cÛdigo de sua preferÍncia (como Visual Studio 2022 ou VS Code).
+* Um editor de c√≥digo de sua prefer√™ncia (como Visual Studio 2022 ou VS Code).
 
 ## Como Rodar o Projeto Localmente
 
-Siga os passos abaixo para configurar e executar a aplicaÁ„o no seu ambiente de desenvolvimento.
+Siga os passos abaixo para configurar e executar a aplica√ß√£o no seu ambiente de desenvolvimento.
 
-**1. Clone o RepositÛrio:**
-Abra um terminal e clone o projeto do GitHub para a sua m·quina.
+**1. Clone o Reposit√≥rio:**
+Abra um terminal e clone o projeto do GitHub para a sua m√°quina.
 ```bash
 git clone URL_DO_SEU_REPOSITORIO_AQUI
 cd nome-da-pasta-do-projeto
 ```
 
 **2. Configure suas Credenciais do Banco de Dados:**
-A aplicaÁ„o precisa se conectar a um banco de dados MongoDB. As credenciais de conex„o s„o armazenadas localmente em um arquivo que **n„o** È enviado para o GitHub por seguranÁa.
+A aplica√ß√£o precisa se conectar a um banco de dados MongoDB. As credenciais s√£o armazenadas localmente em um arquivo que **n√£o** √© enviado para o GitHub por seguran√ßa.
 
 * Na raiz do projeto, crie um novo arquivo chamado `appsettings.Development.json`.
-* Copie e cole o conte˙do abaixo neste novo arquivo:
+* Copie e cole o conte√∫do abaixo neste novo arquivo:
 
     ```json
     {
       "MongoDbSettings": {
         "ConnectionString": "SUA_CONNECTION_STRING_DO_MONGODB_AQUI",
         "DatabaseName": "NOME_DO_SEU_BANCO_DE_DADOS"
+      },
+      "JwtSettings": {
+        "SecretKey": "SUA_CHAVE_SECRETA_SUPER_SECRETA_AQUI"
       }
     }
     ```
-* ***Importante:*** *Substitua `SUA_CONNECTION_STRING_DO_MONGODB_AQUI` e `NOME_DO_SEU_BANCO_DE_DADOS` pelos valores corretos do seu banco.*
+* **Importante:** Substitua os valores pelos dados corretos do seu banco de dados e defina uma chave secreta para o JWT.
 
-**3. Execute a AplicaÁ„o:**
+**3. Execute a Aplica√ß√£o:**
 Ainda no seu terminal, na pasta raiz do projeto, execute o seguinte comando:
 ```bash
 dotnet run
 ```
-A API ser· iniciada e estar· ouvindo em um endereÁo local, como `https://localhost:7202` e `http://localhost:5132`. O terminal mostrar· as URLs exatas.
+A API ser√° iniciada e estar√° ouvindo em um endere√ßo local, como `https://localhost:7202`.
 
-**4. Teste os Endpoints:**
-Com a aplicaÁ„o rodando, abra seu navegador e acesse a URL do Swagger para ver e testar todos os endpoints de forma interativa (lembre-se de usar a porta HTTPS correta):
-`https://localhost:7202/swagger/index.html`
+**4. Acesse a Documenta√ß√£o Interativa:**
+Com a aplica√ß√£o rodando, abra seu navegador e acesse a URL do Swagger para ver e testar todos os endpoints:
+`https://localhost:7202/swagger/index.html` (lembre-se de usar a porta HTTPS correta).
+
+---
+
+## Autentica√ß√£o (JWT) - Como Testar
+
+Todos os endpoints, exceto o de login, s√£o protegidos. Para test√°-los, voc√™ precisa primeiro se autenticar e usar o token recebido.
+
+**Passo 1: Crie um Usu√°rio**
+* Use o endpoint `POST /api/users` para criar um usu√°rio de teste. Lembre-se do email e senha que voc√™ cadastrou.
+
+**Passo 2: Obtenha um Token de Acesso**
+* V√° at√© o endpoint `POST /api/auth/login`.
+* Clique em "Try it out".
+* No corpo da requisi√ß√£o, insira o email e a senha do usu√°rio que voc√™ criou:
+    ```json
+    {
+      "email": "seu_email@cadastrado.com",
+      "senha": "sua_senha"
+    }
+    ```
+* Clique em "Execute". A resposta conter√° seu token JWT. Copie a longa string do token.
+
+**Passo 3: Autorize suas Requisi√ß√µes no Swagger**
+* No topo direito da p√°gina do Swagger, clique no bot√£o **"Authorize"**.
+* Na janela que abrir, no campo "Value", digite `Bearer ` (a palavra "Bearer", um espa√ßo) e **cole o token** que voc√™ copiou.
+* Clique em "Authorize" e depois em "Close".
+
+**Passo 4: Teste os Endpoints Protegidos**
+* Agora, com o cadeado no bot√£o "Authorize" aparecendo como "fechado", todas as suas requisi√ß√µes subsequentes incluir√£o o token de autentica√ß√£o. Voc√™ pode testar qualquer endpoint (`GET /api/produtos`, `POST /api/clientes`, etc.) e eles funcionar√£o.
 
 ---
 
 ## Endpoints da API
 
-A URL base para todos os endpoints È `https://localhost:[PORTA]/api`.
+‚ö†Ô∏è **Importante:** Todos os endpoints abaixo, exceto `/api/auth/login`, s√£o protegidos e requerem um token JWT. Siga as instru√ß√µes na se√ß√£o "Autentica√ß√£o" para poder test√°-los.
+
+### Autentica√ß√£o (`/api/auth`)
+* `POST /api/auth/login`: (P√∫blico) Realiza o login de um usu√°rio e retorna um token JWT.
 
 ### Produtos (`/api/produtos`)
 * `GET /api/produtos`: Retorna uma lista de todos os produtos.
-* `GET /api/produtos/{id}`: Retorna um produto especÌfico pelo seu `id`.
-* `POST /api/produtos`: Cria um novo produto. O corpo da requisiÁ„o deve ser um JSON:
-    ```json
-    {
-      "nome": "Notebook Gamer",
-      "quantidade": 15,
-      "tipo": "EletrÙnico",
-      "preco": 7500.50
-    }
-    ```
+* `GET /api/produtos/{id}`: Retorna um produto espec√≠fico pelo seu `id`.
+* `POST /api/produtos`: Cria um novo produto.
 * `PUT /api/produtos/{id}`: Atualiza um produto existente.
-* `DELETE /api/produtos/{id}`: Deleta um produto especÌfico.
+* `DELETE /api/produtos/{id}`: Deleta um produto espec√≠fico.
 
 ### Clientes (`/api/clientes`)
 * `GET /api/clientes`: Retorna uma lista de todos os clientes.
-* `GET /api/clientes/{id}`: Retorna um cliente especÌfico.
+* `GET /api/clientes/{id}`: Retorna um cliente espec√≠fico.
 * `POST /api/clientes`: Cria um novo cliente.
-    ```json
-    {
-      "nome": "Empresa Exemplo LTDA",
-      "cnpj": "12345678000199",
-      "email": "contato@exemplo.com",
-      "endereco": "Rua dos Exemplos, 123"
-    }
-    ```
 * `PUT /api/clientes/{id}`: Atualiza um cliente existente.
-* `DELETE /api/clientes/{id}`: Deleta um cliente especÌfico.
+* `DELETE /api/clientes/{id}`: Deleta um cliente espec√≠fico.
 
-### Usu·rios (`/api/users`)
-* `GET /api/users`: Retorna uma lista de todos os usu·rios.
-* `GET /api/users/{id}`: Retorna um usu·rio especÌfico.
-* `POST /api/users`: Cria um novo usu·rio.
-    ```json
-    {
-      "nome": "Administrador",
-      "email": "admin@exemplo.com",
-      "tipo": "Admin",
-      "status": true
-    }
-    ```
-* `PUT /api/users/{id}`: Atualiza um usu·rio existente.
-* `DELETE /api/users/{id}`: Deleta um usu·rio especÌfico.
+### Usu√°rios (`/api/users`)
+* `GET /api/users`: Retorna uma lista de todos os usu√°rios.
+* `GET /api/users/{id}`: Retorna um usu√°rio espec√≠fico.
+* `POST /api/users`: Cria um novo usu√°rio (geralmente, este endpoint tamb√©m deveria ser protegido e acess√≠vel apenas por administradores).
+* `PUT /api/users/{id}`: Atualiza um usu√°rio existente.
+* `DELETE /api/users/{id}`: Deleta um usu√°rio espec√≠fico.
 
 ### Pedidos (`/api/pedidos`)
 * `GET /api/pedidos`: Retorna uma lista de todos os pedidos.
-* `GET /api/pedidos/{id}`: Retorna um pedido especÌfico.
+* `GET /api/pedidos/{id}`: Retorna um pedido espec√≠fico.
 * `POST /api/pedidos`: Cria um novo pedido.
-    ```json
-    {
-      "nomeProduto": "Notebook Gamer",
-      "quantidadeProduto": 2,
-      "nomeCliente": "Empresa Exemplo LTDA"
-    }
-    ```
 * `PUT /api/pedidos/{id}`: Atualiza um pedido existente.
-* `DELETE /api/pedidos/{id}`: Deleta um pedido especÌfico.
+* `DELETE /api/pedidos/{id}`: Deleta um pedido espec√≠fico.

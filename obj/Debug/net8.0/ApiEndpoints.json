@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "ControleEstoque.Api.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "loginModel",
+        "Type": "ControleEstoque.Api.Controllers.LoginModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ControleEstoque.Api.Controllers.ClientesController",
     "Method": "GetClientes",
     "RelativePath": "api/Clientes",

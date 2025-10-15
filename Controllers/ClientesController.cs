@@ -1,5 +1,6 @@
 ﻿using ControleEstoque.Api.Data;
 using ControleEstoque.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 
@@ -7,6 +8,7 @@ namespace ControleEstoque.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ClientesController : ControllerBase
     {
         private readonly MongoDbContext _context;

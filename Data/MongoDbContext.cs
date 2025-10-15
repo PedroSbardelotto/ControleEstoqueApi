@@ -15,10 +15,12 @@ namespace ControleEstoque.Api.Data
             var mongoUrl = new MongoUrl(settings.Value.ConnectionString);
             var clientSettings = MongoClientSettings.FromUrl(mongoUrl);
 
-            // Esta é a configuração chave que resolve o problema
-            clientSettings.SslSettings = new SslSettings() { EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12 };
+            // Esta é a configuração chave que resolve o problema,
+            // forçando o uso do protocolo de segurança TLS 1.2
+            clientSettings.SslSettings =
+                new SslSettings() { EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12 };
 
-            // Cria o cliente com as novas configurações
+            // Cria o cliente com as novas configurações de segurança
             var client = new MongoClient(clientSettings);
             _database = client.GetDatabase(settings.Value.DatabaseName);
         }

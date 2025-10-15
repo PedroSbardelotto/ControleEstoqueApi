@@ -1,8 +1,10 @@
 using ControleEstoque.Api.Data;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
-// --- INÍCIO DA CONFIGURAÇÃO DO CORS ---
+//INÍCIO CORS 
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -19,16 +21,29 @@ builder.Services.AddCors(options =>
                       });
 });
 
-// --- FIM DA CONFIGURAÇÃO DO CORS ---
-
-
-// Adiciona os serviços ao contêiner.
-
+//FIM CORS 
 // Configuração do MongoDB
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.AddSingleton<MongoDbContext>();
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false; // Em produção, considere usar true
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]!)),
+        ValidateIssuer = false, // Em cenários mais complexos, pode validar o emissor
+        ValidateAudience = false // Em cenários mais complexos, pode validar a audiência
+    };
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
