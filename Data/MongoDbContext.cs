@@ -17,8 +17,11 @@ namespace ControleEstoque.Api.Data
 
             // Esta é a configuração chave que resolve o problema,
             // forçando o uso do protocolo de segurança TLS 1.2
-            clientSettings.SslSettings =
-                new SslSettings() { EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12 };
+            clientSettings.SslSettings = new SslSettings()
+            {
+                EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12,
+                CheckCertificateRevocation = false
+            };
 
             // Cria o cliente com as novas configurações de segurança
             var client = new MongoClient(clientSettings);

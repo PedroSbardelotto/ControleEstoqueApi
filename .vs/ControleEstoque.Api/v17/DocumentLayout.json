@@ -3,20 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\home\\source\\repos\\controleestoque.api\\controllers\\produtoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:controllers\\produtoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\home\\source\\repos\\controleestoque.api\\data\\mongodbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:data\\mongodbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\home\\source\\repos\\controleestoque.api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\home\\source\\repos\\controleestoque.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\home\\source\\repos\\controleestoque.api\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\home\\source\\repos\\controleestoque.api\\data\\mongodbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:data\\mongodbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\home\\source\\repos\\controleestoque.api\\controllers\\produtoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:controllers\\produtoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\home\\source\\repos\\controleestoque.api\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\home\\source\\repos\\controleestoque.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,13 +54,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "appsettings.Development.json",
+              "ToolTip": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\appsettings.Development.json",
+              "RelativeToolTip": "appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-10-15T13:46:55.97Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "MongoDbContext.cs",
               "DocumentMoniker": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\Data\\MongoDbContext.cs",
               "RelativeDocumentMoniker": "Data\\MongoDbContext.cs",
               "ToolTip": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\Data\\MongoDbContext.cs",
               "RelativeToolTip": "Data\\MongoDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAyAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-15T13:02:42.386Z",
               "EditorCaption": ""
@@ -76,7 +93,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
@@ -84,12 +101,11 @@
               "RelativeToolTip": "Controllers\\UsersController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-15T12:47:43.481Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-15T12:47:43.481Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "ProdutosController.cs",
               "DocumentMoniker": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\Controllers\\ProdutosController.cs",
               "RelativeDocumentMoniker": "Controllers\\ProdutosController.cs",
@@ -102,7 +118,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
@@ -110,12 +126,11 @@
               "RelativeToolTip": "Controllers\\AuthController.cs",
               "ViewState": "AgIAADcAAAAAAAAAAAAcwFIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-15T11:53:27.662Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-15T11:53:27.662Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Home\\source\\repos\\ControleEstoque.Api\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -123,8 +138,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-15T11:50:09.137Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-15T11:50:09.137Z"
             }
           ]
         }
