@@ -132,9 +132,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "maxLength": 24,
-              "minLength": 24,
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -158,6 +157,67 @@
                 }
               }
             }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Clientes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cliente"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cliente"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cliente"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Clientes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -224,7 +284,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pedido"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pedido"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pedido"
+                }
+              }
+            }
           }
         }
       }
@@ -234,15 +311,15 @@
         "tags": [
           "Pedidos"
         ],
+        "operationId": "GetPedido",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "maxLength": 24,
-              "minLength": 24,
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -279,9 +356,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "maxLength": 24,
-              "minLength": 24,
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -320,9 +396,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "maxLength": 24,
-              "minLength": 24,
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -395,7 +470,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              }
+            }
           }
         }
       }
@@ -405,15 +497,15 @@
         "tags": [
           "Produtos"
         ],
+        "operationId": "GetProduto",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "maxLength": 24,
-              "minLength": 24,
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -450,9 +542,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "maxLength": 24,
-              "minLength": 24,
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -491,9 +582,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "maxLength": 24,
-              "minLength": 24,
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -566,7 +656,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
           }
         }
       }
@@ -576,15 +683,15 @@
         "tags": [
           "Users"
         ],
+        "operationId": "GetUser",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "maxLength": 24,
-              "minLength": 24,
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -621,9 +728,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "maxLength": 24,
-              "minLength": 24,
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -662,9 +768,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "maxLength": 24,
-              "minLength": 24,
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -721,8 +826,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
+            "type": "integer",
+            "format": "int32"
           },
           "nome": {
             "type": "string",
@@ -761,8 +866,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
+            "type": "integer",
+            "format": "int32"
           },
           "nomeProduto": {
             "type": "string",
@@ -783,8 +888,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
+            "type": "integer",
+            "format": "int32"
           },
           "nome": {
             "type": "string",
@@ -814,8 +919,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
+            "type": "integer",
+            "format": "int32"
           },
           "nome": {
             "type": "string",

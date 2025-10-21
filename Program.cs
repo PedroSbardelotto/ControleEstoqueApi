@@ -1,11 +1,12 @@
 using ControleEstoque.Api.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore; // <-- ADICIONADO para EF Core
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
-//INÍCIO CORS 
-
+// --- INÍCIO CORS ---
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddCors(options =>
@@ -20,13 +21,21 @@ builder.Services.AddCors(options =>
                                 .AllowAnyMethod();
                       });
 });
+// --- FIM CORS ---
 
-//FIM CORS 
-// Configuração do MongoDB
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection("MongoDbSettings"));
-builder.Services.AddSingleton<MongoDbContext>();
+// --- Configuração do Banco de Dados ---
+// REMOVIDO: Configuração do MongoDB
+// builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+// builder.Services.AddSingleton<MongoDbContext>();
 
+// ADICIONADO: Configuração do SQL Server com EF Core
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(connectionString));
+// --- FIM Configuração do Banco de Dados ---
+
+
+// --- Configuração de Autenticação JWT ---
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -44,6 +53,8 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false // Em cenários mais complexos, pode validar a audiência
     };
 });
+// --- FIM Configuração de Autenticação JWT ---
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -64,7 +75,12 @@ app.UseHttpsRedirection();
 // A ordem aqui é importante!
 app.UseCors(MyAllowSpecificOrigins);
 
+// --- Configuração de Autenticação e Autorização no Pipeline ---
+// A ordem correta é Authentication -> Authorization
+app.UseAuthentication(); // Garante que essa linha esteja presente
 app.UseAuthorization();
+// --- FIM Configuração de Autenticação e Autorização ---
+
 
 app.MapControllers();
 

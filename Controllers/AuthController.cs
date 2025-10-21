@@ -1,9 +1,9 @@
 ﻿using ControleEstoque.Api.Data;
 using ControleEstoque.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore; // <-- ADICIONADO
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using MongoDB.Driver;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ControleEstoque.Api.Controllers
 {
-    // DTO simples para receber os dados de login
+    // DTO simples para receber os dados de login (não muda)
     public class LoginModel
     {
         public string Email { get; set; } = string.Empty;
@@ -23,10 +23,11 @@ namespace ControleEstoque.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly MongoDbContext _context;
+        private readonly AppDbContext _context; // <-- ALTERADO para AppDbContext
         private readonly IConfiguration _configuration;
 
-        public AuthController(MongoDbContext context, IConfiguration configuration)
+        // Construtor alterado para injetar AppDbContext
+        public AuthController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
@@ -35,8 +36,9 @@ namespace ControleEstoque.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
-            // 1. Busca o usuário pelo email no banco
-            var user = await _context.Usuarios.Find(u => u.Email == loginModel.Email).FirstOrDefaultAsync();
+            // 1. Busca o usuário pelo email no banco usando LINQ
+            var user = await _context.Usuarios
+                                     .FirstOrDefaultAsync(u => u.Email == loginModel.Email); // <-- ALTERADO para LINQ
 
             // 2. Valida as credenciais
             if (user == null)
@@ -51,7 +53,7 @@ namespace ControleEstoque.Api.Controllers
                 return Unauthorized("Email ou senha inválidos.");
             }
 
-            // 3. Gera o Token JWT
+            // 3. Gera o Token JWT (não muda, mas Id agora é int)
             var token = GenerateJwtToken(user);
 
             // 4. Retorna o token
@@ -67,9 +69,9 @@ namespace ControleEstoque.Api.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, user.Id!.ToString()),
+                    // Id agora é int, então ToString() funciona diretamente
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Email, user.Email),
-                    // Você pode adicionar outras "claims" (informações) aqui, como o tipo/role do usuário
                     new Claim(ClaimTypes.Role, user.Tipo)
                 }),
                 Expires = DateTime.UtcNow.AddHours(8), // Tempo de validade do token

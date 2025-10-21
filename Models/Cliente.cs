@@ -1,15 +1,11 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-namespace ControleEstoque.Api.Models
+﻿namespace ControleEstoque.Api.Models
 {
     public class Cliente
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
-        public string Nome { get; set; }
-        public string CNPJ { get; set; }
-        public string Email { get; set; }
-        public string Endereco { get; set; }
+        public int Id { get; set; }
+        public string Nome { get; set; } = string.Empty;
+        public string CNPJ { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Endereco { get; set; } = string.Empty;
     }
 }

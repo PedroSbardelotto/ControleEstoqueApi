@@ -2,69 +2,122 @@
 using ControleEstoque.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore; // <-- ADICIONADO para EF Core
 
 namespace ControleEstoque.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    // [Authorize] // MANTIDO COMENTADO por enquanto para criar o 1º Admin
     public class UsersController : ControllerBase
     {
-        private readonly MongoDbContext _context;
+        private readonly AppDbContext _context; // <-- ALTERADO para AppDbContext
 
-        public UsersController(MongoDbContext context)
+        // Construtor alterado para injetar AppDbContext
+        public UsersController(AppDbContext context)
         {
             _context = context;
         }
 
+        // GET: api/users
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetUsers() =>
-            await _context.Usuarios.Find(_ => true).ToListAsync();
-
-        [HttpGet("{id:length(24)}")]
-        public async Task<ActionResult<User>> GetUser(string id)
+        [Authorize] // Protegendo o GET geral
+        public async Task<ActionResult<List<User>>> GetUsers()
         {
-            var user = await _context.Usuarios.Find(u => u.Id == id).FirstOrDefaultAsync();
-            if (user is null)
+            // ATENÇÃO: Retorna usuários COM senha (inseguro). Idealmente usar um DTO.
+            return await _context.Usuarios.ToListAsync();
+        }
+
+        // GET: api/users/{id}
+        [HttpGet("{id}", Name = "GetUser")]
+        [Authorize] // Protegendo o GET por ID
+        public async Task<ActionResult<User>> GetUser(int id)
+        {
+            var user = await _context.Usuarios.FindAsync(id);
+
+            if (user == null)
             {
-                return NotFound();
+                return NotFound($"Usuário com ID {id} não encontrado.");
             }
+            // ATENÇÃO: Retorna usuário COM senha (inseguro). Idealmente usar um DTO.
             return user;
         }
 
+        // POST: api/users
         [HttpPost]
-        public async Task<IActionResult> CriarUser(User novoUser)
+        // [Authorize(Roles = "Admin")] // MANTIDO COMENTADO por enquanto
+        public async Task<ActionResult<User>> CriarUser([FromBody] User novoUser)
         {
-            await _context.Usuarios.InsertOneAsync(novoUser);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // --- PONTO CRÍTICO DE SEGURANÇA ---
+            // AQUI VOCÊ DEVE ADICIONAR A LÓGICA PARA FAZER O HASH DA SENHA ANTES DE SALVAR
+            // Ex: novoUser.Senha = PasswordHasher.Hash(novoUser.Senha);
+            // --- FIM DO PONTO CRÍTICO ---
+
+            await _context.Usuarios.AddAsync(novoUser);
+            await _context.SaveChangesAsync();
+
+            // ATENÇÃO: Retorna usuário COM senha (inseguro). Idealmente usar um DTO.
             return CreatedAtAction(nameof(GetUser), new { id = novoUser.Id }, novoUser);
         }
 
-        [HttpPut("{id:length(24)}")]
-        public async Task<IActionResult> AtualizarUser(string id, User userAtualizado)
+        // PUT: api/users/{id}
+        [HttpPut("{id}")]
+        [Authorize] // Protegendo a atualização
+        public async Task<IActionResult> AtualizarUser(int id, [FromBody] User userAtualizado)
         {
-            var user = await _context.Usuarios.Find(u => u.Id == id).FirstOrDefaultAsync();
-            if (user is null)
+            if (id != userAtualizado.Id)
             {
-                return NotFound();
+                return BadRequest("O ID da URL não corresponde ao ID do usuário fornecido.");
             }
 
-            userAtualizado.Id = user.Id;
-            await _context.Usuarios.ReplaceOneAsync(u => u.Id == id, userAtualizado);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // --- CONSIDERAÇÃO DE SEGURANÇA ---
+            // Se a senha foi incluída na atualização, ela deve ser hasheada aqui também
+            // --- FIM DA CONSIDERAÇÃO ---
+
+            _context.Entry(userAtualizado).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Usuarios.Any(e => e.Id == id))
+                {
+                    return NotFound($"Usuário com ID {id} não encontrado para atualização.");
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
 
-        [HttpDelete("{id:length(24)}")]
-        public async Task<IActionResult> DeletarUser(string id)
+        // DELETE: api/users/{id}
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")] // Somente Admins podem deletar usuários
+        public async Task<IActionResult> DeletarUser(int id)
         {
-            var user = await _context.Usuarios.Find(u => u.Id == id).FirstOrDefaultAsync();
-            if (user is null)
+            var user = await _context.Usuarios.FindAsync(id);
+            if (user == null)
             {
-                return NotFound();
+                return NotFound($"Usuário com ID {id} não encontrado para exclusão.");
             }
 
-            await _context.Usuarios.DeleteOneAsync(u => u.Id == id);
+            _context.Usuarios.Remove(user);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }

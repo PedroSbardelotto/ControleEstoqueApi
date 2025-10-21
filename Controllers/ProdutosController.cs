@@ -2,7 +2,7 @@
 using ControleEstoque.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 
 namespace ControleEstoque.Api.Controllers
 {
@@ -11,62 +11,98 @@ namespace ControleEstoque.Api.Controllers
     [Authorize]
     public class ProdutosController : ControllerBase
     {
-        private readonly MongoDbContext _context;
+        private readonly AppDbContext _context;
 
-        public ProdutosController(MongoDbContext context)
+        public ProdutosController(AppDbContext context)
         {
             _context = context;
         }
 
+        // GET: api/produtos
         [HttpGet]
-        public async Task<ActionResult<List<Produto>>> GetProdutos() =>
-            await _context.Produtos.Find(_ => true).ToListAsync();
-
-        [HttpGet("{id:length(24)}")]
-        public async Task<ActionResult<Produto>> GetProduto(string id)
+        public async Task<ActionResult<List<Produto>>> GetProdutos()
         {
-            var produto = await _context.Produtos.Find(p => p.Id == id).FirstOrDefaultAsync();
-            if (produto is null)
+            return await _context.Produtos.ToListAsync();
+        }
+
+        // GET: api/produtos/{id}
+        [HttpGet("{id}", Name = "GetProduto")]
+        public async Task<ActionResult<Produto>> GetProduto(int id)
+        {
+            var produto = await _context.Produtos.FindAsync(id);
+
+            if (produto == null)
             {
-                return NotFound();
-            }
+                return NotFound($"Produto com ID {id} não encontrado.");
+            } 
+
             return produto;
         }
 
+        // POST: api/produtos
         [HttpPost]
-        public async Task<IActionResult> CriarProduto(Produto novoProduto)
+        public async Task<ActionResult<Produto>> CriarProduto([FromBody] Produto novoProduto)
         {
-            await _context.Produtos.InsertOneAsync(novoProduto);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _context.Produtos.AddAsync(novoProduto);
+            await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetProduto), new { id = novoProduto.Id }, novoProduto);
         }
 
-        [HttpPut("{id:length(24)}")]
-        public async Task<IActionResult> AtualizarProduto(string id, Produto produtoAtualizado)
+        // PUT: api/produtos/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AtualizarProduto(int id, [FromBody] Produto produtoAtualizado)
         {
-            var produto = await _context.Produtos.Find(p => p.Id == id).FirstOrDefaultAsync();
-            if (produto is null)
+            if (id != produtoAtualizado.Id)
             {
-                return NotFound();
+                return BadRequest("O ID da URL não corresponde ao ID do produto fornecido.");
             }
 
-            produtoAtualizado.Id = produto.Id; // Garante que o ID não seja alterado
-            await _context.Produtos.ReplaceOneAsync(p => p.Id == id, produtoAtualizado);
-
-            return NoContent(); // Resposta padrão para um update bem-sucedido
-        }
-
-        [HttpDelete("{id:length(24)}")]
-        public async Task<IActionResult> DeletarProduto(string id)
-        {
-            var produto = await _context.Produtos.Find(p => p.Id == id).FirstOrDefaultAsync();
-            if (produto is null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest(ModelState);
             }
 
-            await _context.Produtos.DeleteOneAsync(p => p.Id == id);
+            _context.Entry(produtoAtualizado).State = EntityState.Modified;
 
-            return NoContent(); // Resposta padrão para um delete bem-sucedido
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Produtos.Any(e => e.Id == id))
+                {
+                    return NotFound($"Produto com ID {id} não encontrado para atualização.");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
-    }
+
+        // DELETE: api/produtos/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarProduto(int id)
+        {
+            var produto = await _context.Produtos.FindAsync(id);
+            if (produto == null)
+            {
+                return NotFound($"Produto com ID {id} não encontrado para exclusão.");
+            }
+
+            _context.Produtos.Remove(produto);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+    } 
 }
