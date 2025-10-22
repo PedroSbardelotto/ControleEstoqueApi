@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "TMVntAQ6+Ac=",
+  "dgSpecHash": "TGqSFDsRlh4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\ControleEstoque.Api.csproj",
+  "projectFilePath": "C:\\Users\\55519\\Source\\Repos\\ControleEstoqueApi\\ControleEstoque.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\55519\\.nuget\\packages\\awssdk.core\\3.7.100.14\\awssdk.core.3.7.100.14.nupkg.sha512",
     "C:\\Users\\55519\\.nuget\\packages\\awssdk.securitytoken\\3.7.100.14\\awssdk.securitytoken.3.7.100.14.nupkg.sha512",

@@ -1,8 +1,10 @@
 using ControleEstoque.Api.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore; // <-- ADICIONADO para EF Core
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+// Adicionar este using para OpenApiReference
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +16,6 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          // IMPORTANTE: Substitua pelos endereços do seu front-end
-                          // quando você o tiver. Pode adicionar quantos forem necessários.
                           policy.WithOrigins("http://localhost:3000", "http://127.0.0.1:5500")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
@@ -24,11 +24,6 @@ builder.Services.AddCors(options =>
 // --- FIM CORS ---
 
 // --- Configuração do Banco de Dados ---
-// REMOVIDO: Configuração do MongoDB
-// builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
-// builder.Services.AddSingleton<MongoDbContext>();
-
-// ADICIONADO: Configuração do SQL Server com EF Core
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -36,6 +31,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 // --- Configuração de Autenticação JWT ---
+// (Esta parte configura COMO a API valida os tokens)
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -49,16 +45,53 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JwtSettings:SecretKey"]!)),
-        ValidateIssuer = false, // Em cenários mais complexos, pode validar o emissor
-        ValidateAudience = false // Em cenários mais complexos, pode validar a audiência
+        ValidateIssuer = false,
+        ValidateAudience = false
     };
 });
 // --- FIM Configuração de Autenticação JWT ---
 
 
+// --- Configuração do Swagger para entender JWT ---
+// (Esta parte configura COMO o Swagger mostra o botão Authorize)
+builder.Services.AddSwaggerGen(options =>
+{
+    // 1. Define o esquema de segurança
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey, // Usar ApiKey para o header Authorization
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Insira 'Bearer' [espaço] e então o seu token no campo abaixo.\n\nExemplo: \"Bearer 12345abcdef\""
+    });
+
+    // 2. Adiciona a exigência de autorização (CORRIGIDO)
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference 
+                {
+                    Type = ReferenceType.SecurityScheme, // Tipo da referência
+                    Id = "Bearer" // ID do SecurityDefinition
+                },
+                Scheme = "oauth2", // Apenas informativo
+                Name = "Bearer",   // Apenas informativo
+                In = ParameterLocation.Header // Apenas informativo
+            },
+            new List<string>() // Lista de escopos (vazia para JWT)
+        }
+    });
+});
+// --- FIM Configuração do Swagger ---
+
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 
@@ -70,17 +103,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// Adiciona o middleware do CORS ao pipeline.
-// A ordem aqui é importante!
 app.UseCors(MyAllowSpecificOrigins);
 
-// --- Configuração de Autenticação e Autorização no Pipeline ---
-// A ordem correta é Authentication -> Authorization
-app.UseAuthentication(); // Garante que essa linha esteja presente
+// Ordem correta: Autenticação primeiro, depois Autorização
+app.UseAuthentication();
 app.UseAuthorization();
-// --- FIM Configuração de Autenticação e Autorização ---
-
 
 app.MapControllers();
 

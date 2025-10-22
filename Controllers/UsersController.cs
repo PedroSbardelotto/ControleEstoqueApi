@@ -2,18 +2,18 @@
 using ControleEstoque.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore; // <-- ADICIONADO para EF Core
+using Microsoft.EntityFrameworkCore;
 
 namespace ControleEstoque.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    // [Authorize] // MANTIDO COMENTADO por enquanto para criar o 1º Admin
+    [Authorize]
     public class UsersController : ControllerBase
     {
-        private readonly AppDbContext _context; // <-- ALTERADO para AppDbContext
+        private readonly AppDbContext _context; 
 
-        // Construtor alterado para injetar AppDbContext
+        
         public UsersController(AppDbContext context)
         {
             _context = context;
@@ -45,7 +45,7 @@ namespace ControleEstoque.Api.Controllers
 
         // POST: api/users
         [HttpPost]
-        // [Authorize(Roles = "Admin")] // MANTIDO COMENTADO por enquanto
+        [Authorize(Roles = "Admin")] 
         public async Task<ActionResult<User>> CriarUser([FromBody] User novoUser)
         {
             if (!ModelState.IsValid)
