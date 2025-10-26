@@ -1,7 +1,7 @@
 ﻿using ControleEstoque.Api.Data;
 using ControleEstoque.Api.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore; // <-- ADICIONADO
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;

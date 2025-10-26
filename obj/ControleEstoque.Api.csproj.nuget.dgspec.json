@@ -11,7 +11,7 @@
         "projectName": "ControleEstoque.Api",
         "projectPath": "C:\\Users\\55519\\Source\\Repos\\ControleEstoqueApi\\ControleEstoque.Api.csproj",
         "packagesPath": "C:\\Users\\55519\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\obj\\",
+        "outputPath": "C:\\Users\\55519\\Source\\Repos\\ControleEstoqueApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

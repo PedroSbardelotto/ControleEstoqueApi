@@ -13,13 +13,13 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-                      policy =>
-                      {
-                          policy.WithOrigins("http://localhost:3000", "http://127.0.0.1:5500")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
-                      });
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.AllowAnyOrigin()   // Permite qualquer origem (como http://127.0.0.1:61017)
+                  .AllowAnyHeader()   // Permite cabeçalhos como 'Content-Type' e 'Authorization'
+                  .AllowAnyMethod();  // Permite métodos como GET, POST, PUT, DELETE, e OPTIONS
+        });
 });
 // --- FIM CORS ---
 
@@ -73,7 +73,7 @@ builder.Services.AddSwaggerGen(options =>
         {
             new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference 
+                Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme, // Tipo da referência
                     Id = "Bearer" // ID do SecurityDefinition
@@ -103,7 +103,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors();
 
 // Ordem correta: Autenticação primeiro, depois Autorização
 app.UseAuthentication();
