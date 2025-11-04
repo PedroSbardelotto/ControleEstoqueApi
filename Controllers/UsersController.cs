@@ -3,6 +3,7 @@ using ControleEstoque.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace ControleEstoque.Api.Controllers
 {
@@ -11,26 +12,30 @@ namespace ControleEstoque.Api.Controllers
     [Authorize]
     public class UsersController : ControllerBase
     {
-        private readonly AppDbContext _context; 
+        private readonly AppDbContext _context;
 
-        
-        public UsersController(AppDbContext context)
+
+        private readonly IPasswordHasher<User> _passwordHasher;
+
+
+        // O construtor PRECISA receber o passwordHasher
+        public UsersController(AppDbContext context, IPasswordHasher<User> passwordHasher) // <-- PARÂMETRO ADICIONADO AQUI
         {
             _context = context;
+            _passwordHasher = passwordHasher; // Agora esta linha funciona
         }
 
         // GET: api/users
         [HttpGet]
-        [Authorize] // Protegendo o GET geral
+        [Authorize]
         public async Task<ActionResult<List<User>>> GetUsers()
         {
-            // ATENÇÃO: Retorna usuários COM senha (inseguro). Idealmente usar um DTO.
             return await _context.Usuarios.ToListAsync();
         }
 
         // GET: api/users/{id}
         [HttpGet("{id}", Name = "GetUser")]
-        [Authorize] // Protegendo o GET por ID
+        [Authorize]
         public async Task<ActionResult<User>> GetUser(int id)
         {
             var user = await _context.Usuarios.FindAsync(id);
@@ -39,13 +44,12 @@ namespace ControleEstoque.Api.Controllers
             {
                 return NotFound($"Usuário com ID {id} não encontrado.");
             }
-            // ATENÇÃO: Retorna usuário COM senha (inseguro). Idealmente usar um DTO.
             return user;
         }
 
         // POST: api/users
         [HttpPost]
-        [Authorize(Roles = "Admin")] 
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<User>> CriarUser([FromBody] User novoUser)
         {
             if (!ModelState.IsValid)
@@ -53,21 +57,22 @@ namespace ControleEstoque.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            // --- PONTO CRÍTICO DE SEGURANÇA ---
-            // AQUI VOCÊ DEVE ADICIONAR A LÓGICA PARA FAZER O HASH DA SENHA ANTES DE SALVAR
-            // Ex: novoUser.Senha = PasswordHasher.Hash(novoUser.Senha);
-            // --- FIM DO PONTO CRÍTICO ---
+            // --- CORREÇÃO DE SEGURANÇA ---
+            // Esta linha agora funciona
+            novoUser.Senha = _passwordHasher.HashPassword(novoUser, novoUser.Senha);
+            // --- FIM DA CORREÇÃO DE SEGURANÇA ---
+
+            novoUser.Status = true;
 
             await _context.Usuarios.AddAsync(novoUser);
             await _context.SaveChangesAsync();
 
-            // ATENÇÃO: Retorna usuário COM senha (inseguro). Idealmente usar um DTO.
             return CreatedAtAction(nameof(GetUser), new { id = novoUser.Id }, novoUser);
         }
 
         // PUT: api/users/{id}
         [HttpPut("{id}")]
-        [Authorize] // Protegendo a atualização
+        [Authorize]
         public async Task<IActionResult> AtualizarUser(int id, [FromBody] User userAtualizado)
         {
             if (id != userAtualizado.Id)
@@ -81,7 +86,7 @@ namespace ControleEstoque.Api.Controllers
             }
 
             // --- CONSIDERAÇÃO DE SEGURANÇA ---
-            // Se a senha foi incluída na atualização, ela deve ser hasheada aqui também
+            // (Lógica de hashing de senha na atualização precisará ser adicionada aqui no futuro)
             // --- FIM DA CONSIDERAÇÃO ---
 
             _context.Entry(userAtualizado).State = EntityState.Modified;
@@ -107,7 +112,7 @@ namespace ControleEstoque.Api.Controllers
 
         // DELETE: api/users/{id}
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")] // Somente Admins podem deletar usuários
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeletarUser(int id)
         {
             var user = await _context.Usuarios.FindAsync(id);

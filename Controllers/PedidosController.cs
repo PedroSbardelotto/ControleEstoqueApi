@@ -1,18 +1,22 @@
 ﻿using ControleEstoque.Api.Data;
+using ControleEstoque.Api.DTOs;
 using ControleEstoque.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq; // Necessário para Any() e Include()
+using System.Threading.Tasks;
 
 namespace ControleEstoque.Api.Controllers
 {
-    [ApiController] 
+    [ApiController]
     [Route("api/[controller]")]
     [Authorize]
     public class PedidosController : ControllerBase
     {
         private readonly AppDbContext _context;
 
+        // Injeta o AppDbContext
         public PedidosController(AppDbContext context)
         {
             _context = context;
@@ -22,6 +26,8 @@ namespace ControleEstoque.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Pedido>>> GetPedidos()
         {
+            // Retorna a lista de pedidos. Considerar incluir dados do Cliente/Produto se necessário.
+            // Ex: return await _context.Pedidos.Include(p => p.Cliente).Include(p => p.Produto).ToListAsync();
             return await _context.Pedidos.ToListAsync();
         }
 
@@ -29,31 +35,76 @@ namespace ControleEstoque.Api.Controllers
         [HttpGet("{id}", Name = "GetPedido")]
         public async Task<ActionResult<Pedido>> GetPedido(int id)
         {
-            var pedido = await _context.Pedidos.FindAsync(id);
+            // Busca o pedido E inclui os dados do Cliente e Produto relacionados
+            var pedido = await _context.Pedidos
+                                       .Include(p => p.Cliente) // Inclui dados do Cliente
+                                       .Include(p => p.Produto) // Inclui dados do Produto
+                                       .FirstOrDefaultAsync(p => p.Id == id); // Busca pelo ID
 
             if (pedido == null)
             {
                 return NotFound($"Pedido com ID {id} não encontrado.");
             }
 
+            // Retorna o pedido com os detalhes do cliente e produto
             return pedido;
         }
 
         // POST: api/pedidos
         [HttpPost]
-        public async Task<ActionResult<Pedido>> CriarPedido([FromBody] Pedido novoPedido)
+        // Alterado para receber o DTO
+        public async Task<ActionResult<Pedido>> CriarPedido([FromBody] PedidoCreateDto pedidoDto)
         {
+            // A validação agora usa os atributos do DTO
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                // Retorna os erros detalhados do DTO
+                return BadRequest(new ValidationProblemDetails(ModelState)
+                {
+                    Title = "Um ou mais erros de validação ocorreram no DTO.",
+                    Detail = "Verifique os erros no campo 'errors'."
+                });
             }
+
+            // --- VERIFICAÇÃO DE ESTOQUE ---
+            var produtoEstoque = await _context.Produtos.FindAsync(pedidoDto.ProdutoId);
+
+            if (produtoEstoque == null)
+            {
+                ModelState.AddModelError(nameof(pedidoDto.ProdutoId), $"Produto com ID {pedidoDto.ProdutoId} não encontrado.");
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
+            if (produtoEstoque.Quantidade < pedidoDto.QuantidadeProduto)
+            {
+                ModelState.AddModelError(nameof(pedidoDto.QuantidadeProduto), $"Estoque insuficiente para o produto '{produtoEstoque.Nome}'. Disponível: {produtoEstoque.Quantidade}.");
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
+            // --- ATUALIZAÇÃO DO ESTOQUE ---
+            produtoEstoque.Quantidade -= pedidoDto.QuantidadeProduto;
+            _context.Entry(produtoEstoque).State = EntityState.Modified;
+
+            // --- CRIAÇÃO DO PEDIDO (Mapeando do DTO para a Entidade) ---
+            var novoPedido = new Pedido
+            {
+                ProdutoId = pedidoDto.ProdutoId,
+                ClienteId = pedidoDto.ClienteId,
+                QuantidadeProduto = pedidoDto.QuantidadeProduto
+                // O EF Core cuidará de associar aos objetos Cliente e Produto pelo ID
+            };
 
             await _context.Pedidos.AddAsync(novoPedido);
             await _context.SaveChangesAsync();
 
-            // Retorna 201 Created com a localização do novo recurso e o objeto criado
-            // Certifique-se que GetPedido aceita int como parâmetro
-            return CreatedAtAction(nameof(GetPedido), new { id = novoPedido.Id }, novoPedido); // <-- LINHA QUE FALTAVA
+            // Busca o pedido recém-criado incluindo Cliente e Produto para retornar ao front-end
+            var pedidoCriado = await _context.Pedidos
+                                            .Include(p => p.Cliente)
+                                            .Include(p => p.Produto)
+                                            .FirstOrDefaultAsync(p => p.Id == novoPedido.Id);
+
+            // Retorna 201 Created com o pedido completo (incluindo objetos Cliente/Produto)
+            return CreatedAtAction(nameof(GetPedido), new { id = novoPedido.Id }, pedidoCriado);
         }
 
         // PUT: api/pedidos/{id}
@@ -64,6 +115,11 @@ namespace ControleEstoque.Api.Controllers
             {
                 return BadRequest("O ID da URL não corresponde ao ID do pedido fornecido.");
             }
+
+            // ATENÇÃO: Atualizar um pedido PODE exigir lógica complexa para
+            // reajustar o estoque (devolver estoque antigo, retirar novo estoque).
+            // Por simplicidade, este exemplo apenas atualiza os dados do pedido.
+            // Verifique se ClienteId e ProdutoId enviados existem, se necessário.
 
             if (!ModelState.IsValid)
             {
@@ -86,10 +142,10 @@ namespace ControleEstoque.Api.Controllers
                 {
                     throw;
                 }
-            } // Fechamento do catch
+            }
 
             return NoContent();
-        } // Fechamento do AtualizarPedido
+        }
 
         // DELETE: api/pedidos/{id}
         [HttpDelete("{id}")]
@@ -101,11 +157,19 @@ namespace ControleEstoque.Api.Controllers
                 return NotFound($"Pedido com ID {id} não encontrado para exclusão.");
             }
 
+            // ATENÇÃO: Ao deletar um pedido, você PODE querer restaurar
+            // a quantidade do produto no estoque. Esta lógica não está incluída aqui.
+            // Exemplo (requer buscar o produto):
+            // var produto = await _context.Produtos.FindAsync(pedido.ProdutoId);
+            // if (produto != null) {
+            //     produto.Quantidade += pedido.QuantidadeProduto;
+            //     _context.Entry(produto).State = EntityState.Modified;
+            // }
+
             _context.Pedidos.Remove(pedido);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // Salvaria a remoção do pedido e a atualização do estoque
 
             return NoContent();
         }
-
-    } 
-} 
+    }
+}

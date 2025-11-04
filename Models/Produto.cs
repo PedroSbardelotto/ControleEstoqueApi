@@ -1,4 +1,5 @@
-﻿namespace ControleEstoque.Api.Models
+﻿using System.Collections.Generic;
+namespace ControleEstoque.Api.Models
 {
     public class Produto
     {
@@ -16,5 +17,6 @@
                 return Quantidade > 0 ? "Em Estoque" : "Sem Estoque";
             }
         }
+        public virtual ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
     }
 }

@@ -1,8 +1,11 @@
 using ControleEstoque.Api.Data;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
+using ControleEstoque.Api.Models;
 // Adicionar este using para OpenApiReference
 using Microsoft.OpenApi.Models;
 
@@ -89,7 +92,13 @@ builder.Services.AddSwaggerGen(options =>
 // --- FIM Configuração do Swagger ---
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Esta opção diz ao serializador para ignorar ciclos
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddEndpointsApiExplorer();
 
 

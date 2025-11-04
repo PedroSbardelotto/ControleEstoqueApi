@@ -154,8 +154,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "novoPedido",
-        "Type": "ControleEstoque.Api.Models.Pedido",
+        "Name": "pedidoDto",
+        "Type": "ControleEstoque.Api.DTOs.PedidoCreateDto",
         "IsRequired": true
       }
     ],
@@ -344,6 +344,26 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ControleEstoque.Api.Controllers.RelatoriosController",
+    "Method": "GetVisaoGeralEstoque",
+    "RelativePath": "api/Relatorios/estoque/visaogeral",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "ControleEstoque.Api.DTOs.VisaoGeralEstoqueDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "ControleEstoque.Api.Controllers.UsersController",

@@ -9,10 +9,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace ControleEstoque.Api.Controllers
 {
-    // DTO simples para receber os dados de login (não muda)
+    // DTO simples para receber os dados de login
     public class LoginModel
     {
         public string Email { get; set; } = string.Empty;
@@ -23,40 +24,48 @@ namespace ControleEstoque.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly AppDbContext _context; // <-- ALTERADO para AppDbContext
+        private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
 
-        // Construtor alterado para injetar AppDbContext
-        public AuthController(AppDbContext context, IConfiguration configuration)
+        // vvv ESTA LINHA ESTAVA FALTANDO vvv
+        private readonly IPasswordHasher<User> _passwordHasher;
+        // ^^^ ESTA LINHA ESTAVA FALTANDO ^^^
+
+        // O construtor PRECISA receber o passwordHasher
+        public AuthController(AppDbContext context, IConfiguration configuration, IPasswordHasher<User> passwordHasher) // <-- PARÂMETRO ADICIONADO AQUI
         {
             _context = context;
             _configuration = configuration;
+            _passwordHasher = passwordHasher; // Agora esta linha funciona
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
-            // 1. Busca o usuário pelo email no banco usando LINQ
             var user = await _context.Usuarios
-                                     .FirstOrDefaultAsync(u => u.Email == loginModel.Email); // <-- ALTERADO para LINQ
+                                     .FirstOrDefaultAsync(u => u.Email == loginModel.Email);
 
-            // 2. Valida as credenciais
             if (user == null)
             {
                 return Unauthorized("Email ou senha inválidos.");
             }
 
-            // ATENÇÃO: Falha de segurança GRAVE! Apenas para fins didáticos.
-            // O próximo passo DEVE ser implementar hashing de senha.
-            if (user.Senha != loginModel.Senha)
+            if (user.Status == false)
+            {
+                return Unauthorized("Usuário está inativo. Contate o administrador.");
+            }
+
+            // --- CORREÇÃO DE SEGURANÇA ---
+            // Esta linha agora funciona
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Senha, loginModel.Senha);
+
+            if (result == PasswordVerificationResult.Failed)
             {
                 return Unauthorized("Email ou senha inválidos.");
             }
+            // --- FIM DA CORREÇÃO DE SEGURANÇA ---
 
-            // 3. Gera o Token JWT (não muda, mas Id agora é int)
             var token = GenerateJwtToken(user);
-
-            // 4. Retorna o token
             return Ok(new { token = token });
         }
 
@@ -69,12 +78,11 @@ namespace ControleEstoque.Api.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    // Id agora é int, então ToString() funciona diretamente
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.Tipo)
                 }),
-                Expires = DateTime.UtcNow.AddHours(8), // Tempo de validade do token
+                Expires = DateTime.UtcNow.AddHours(8),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 

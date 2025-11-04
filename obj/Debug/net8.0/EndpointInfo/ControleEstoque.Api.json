@@ -267,17 +267,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Pedido"
+                "$ref": "#/components/schemas/PedidoCreateDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Pedido"
+                "$ref": "#/components/schemas/PedidoCreateDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Pedido"
+                "$ref": "#/components/schemas/PedidoCreateDto"
               }
             }
           }
@@ -594,6 +594,35 @@
         }
       }
     },
+    "/api/Relatorios/estoque/visaogeral": {
+      "get": {
+        "tags": [
+          "Relatorios"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/VisaoGeralEstoqueDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VisaoGeralEstoqueDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VisaoGeralEstoqueDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Users": {
       "get": {
         "tags": [
@@ -844,6 +873,13 @@
           "endereco": {
             "type": "string",
             "nullable": true
+          },
+          "pedidos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pedido"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -869,17 +905,52 @@
             "type": "integer",
             "format": "int32"
           },
-          "nomeProduto": {
-            "type": "string",
-            "nullable": true
+          "produtoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "produto": {
+            "$ref": "#/components/schemas/Produto"
+          },
+          "clienteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cliente": {
+            "$ref": "#/components/schemas/Cliente"
           },
           "quantidadeProduto": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PedidoCreateDto": {
+        "required": [
+          "clienteId",
+          "produtoId",
+          "quantidadeProduto"
+        ],
+        "type": "object",
+        "properties": {
+          "produtoId": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
           },
-          "nomeCliente": {
-            "type": "string",
-            "nullable": true
+          "clienteId": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "quantidadeProduto": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -911,6 +982,13 @@
             "type": "string",
             "nullable": true,
             "readOnly": true
+          },
+          "pedidos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Pedido"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -940,6 +1018,20 @@
           },
           "status": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VisaoGeralEstoqueDto": {
+        "type": "object",
+        "properties": {
+          "totalItensUnicos": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "valorTotalEstoque": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
