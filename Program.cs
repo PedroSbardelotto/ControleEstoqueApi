@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using ControleEstoque.Api.Models;
 // Adicionar este using para OpenApiReference
 using Microsoft.OpenApi.Models;
+// ADICIONAR ESTE USING PARA O POSTGRESQL
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +18,13 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddCors(options =>
 {
+    // Sua política padrão com AllowAnyOrigin() já funciona perfeitamente para o Render.
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.AllowAnyOrigin()   // Permite qualquer origem (como http://127.0.0.1:61017)
-                  .AllowAnyHeader()   // Permite cabeçalhos como 'Content-Type' e 'Authorization'
-                  .AllowAnyMethod();  // Permite métodos como GET, POST, PUT, DELETE, e OPTIONS
+            policy.AllowAnyOrigin()   // Permite qualquer origem
+                  .AllowAnyHeader()   // Permite cabeçalhos
+                  .AllowAnyMethod();  // Permite métodos
         });
 });
 // --- FIM CORS ---
@@ -29,7 +32,8 @@ builder.Services.AddCors(options =>
 // --- Configuração do Banco de Dados ---
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    // options.UseSqlServer(connectionString)); // <-- REMOVIDO
+    options.UseNpgsql(connectionString)); // <-- ADICIONADO (Troca para PostgreSQL)
 // --- FIM Configuração do Banco de Dados ---
 
 
@@ -112,6 +116,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Usa a política de CORS padrão (AllowAnyOrigin)
 app.UseCors();
 
 // Ordem correta: Autenticação primeiro, depois Autorização

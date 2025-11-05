@@ -342,4 +342,5 @@ C:\Users\Home\source\repos\ControleEstoque.Api\obj\Debug\net8.0\ControleEstoque.
 C:\Users\Home\source\repos\ControleEstoque.Api\obj\Debug\net8.0\ControleEstoque.Api.genruntimeconfig.cache
 C:\Users\Home\source\repos\ControleEstoque.Api\obj\Debug\net8.0\ref\ControleEstoque.Api.dll
 C:\Users\55519\Source\Repos\ControleEstoqueApi\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-C:\Users\55519\Source\Repos\ControleEstoqueApi\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+C:\Users\55519\Source\Repos\ControleEstoqueApi\bin\Debug\net8.0\Npgsql.dll
+C:\Users\55519\Source\Repos\ControleEstoqueApi\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll

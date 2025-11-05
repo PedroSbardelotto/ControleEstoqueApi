@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "TID4vhJ+hp0=",
+  "dgSpecHash": "TnEn6e7aw7o=",
   "success": true,
   "projectFilePath": "C:\\Users\\55519\\Source\\Repos\\ControleEstoqueApi\\ControleEstoque.Api.csproj",
   "expectedPackageFiles": [
@@ -53,6 +53,8 @@
     "C:\\Users\\55519\\.nuget\\packages\\mongodb.driver.core\\2.30.0\\mongodb.driver.core.2.30.0.nupkg.sha512",
     "C:\\Users\\55519\\.nuget\\packages\\mongodb.libmongocrypt\\1.12.0\\mongodb.libmongocrypt.1.12.0.nupkg.sha512",
     "C:\\Users\\55519\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\55519\\.nuget\\packages\\npgsql\\8.0.3\\npgsql.8.0.3.nupkg.sha512",
+    "C:\\Users\\55519\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.4\\npgsql.entityframeworkcore.postgresql.8.0.4.nupkg.sha512",
     "C:\\Users\\55519\\.nuget\\packages\\sharpcompress\\0.30.1\\sharpcompress.0.30.1.nupkg.sha512",
     "C:\\Users\\55519\\.nuget\\packages\\snappier\\1.0.0\\snappier.1.0.0.nupkg.sha512",
     "C:\\Users\\55519\\.nuget\\packages\\swashbuckle.aspnetcore\\6.6.2\\swashbuckle.aspnetcore.6.6.2.nupkg.sha512",
