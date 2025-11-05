@@ -107,6 +107,71 @@ builder.Services.AddEndpointsApiExplorer();
 
 
 var app = builder.Build();
+// --- INÍCIO: SEED DO USUÁRIO ADMIN ---
+// Esta função é chamada para executar o seed
+await SeedDatabaseAsync(app);
+
+async Task SeedDatabaseAsync(WebApplication app)
+{
+    // Cria um "escopo" para pegar os serviços que precisamos
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var logger = services.GetRequiredService<ILogger<Program>>();
+
+        try
+        {
+            var context = services.GetRequiredService<AppDbContext>();
+            var passwordHasher = services.GetRequiredService<IPasswordHasher<User>>();
+            var configuration = services.GetRequiredService<IConfiguration>();
+
+            // 1. Verifica se já existe algum usuário no banco
+            if (!await context.Usuarios.AnyAsync())
+            {
+                logger.LogInformation("Banco de dados de usuários vazio. Criando usuário Admin padrão...");
+
+                // 2. Pega os dados do admin das Variáveis de Ambiente
+                var adminEmail = configuration["ADMIN_EMAIL"];
+                var adminPassword = configuration["ADMIN_PASSWORD"];
+
+                if (string.IsNullOrEmpty(adminEmail) || string.IsNullOrEmpty(adminPassword))
+                {
+                    logger.LogError("ADMIN_EMAIL ou ADMIN_PASSWORD não configurados. Usuário Admin não pode ser criado.");
+                }
+                else
+                {
+                    // 3. Cria o objeto User
+                    var adminUser = new User
+                    {
+                        Nome = "Administrador",
+                        Email = adminEmail,
+                        Tipo = "Admin",
+                        Status = true
+                    };
+
+                    // 4. Faz o hash da senha
+                    adminUser.Senha = passwordHasher.HashPassword(adminUser, adminPassword);
+
+                    // 5. Salva o usuário no banco
+                    await context.Usuarios.AddAsync(adminUser);
+                    await context.SaveChangesAsync();
+
+                    logger.LogInformation("Usuário Admin padrão criado com sucesso.");
+                }
+            }
+            else
+            {
+                logger.LogInformation("Banco de dados já contém usuários. Seed do Admin ignorado.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Loga o erro se o seed falhar (ex: falha ao conectar no banco)
+            logger.LogError(ex, "Ocorreu um erro ao tentar semear o banco de dados com o usuário Admin.");
+        }
+    }
+}
+// --- FIM: SEED DO USUÁRIO ADMIN ---
 
 // Configura o pipeline de requisições HTTP.
 if (app.Environment.IsDevelopment())
