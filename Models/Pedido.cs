@@ -1,14 +1,19 @@
-﻿namespace ControleEstoque.Api.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace ControleEstoque.Api.Models
 {
     public class Pedido
     {
         public int Id { get; set; }
-        public int ProdutoId { get; set; }
-        public virtual Produto Produto { get; set; } = null!;
+
         public int ClienteId { get; set; }
         public virtual Cliente Cliente { get; set; } = null!;
-        public int QuantidadeProduto { get; set; }
 
-        
+        public DateTime DataPedido { get; set; }
+        public string Status { get; set; } = string.Empty;
+
+        // Um Pedido tem uma coleção de Itens de Pedido
+        public virtual ICollection<PedidoItem> PedidoItens { get; set; } = new List<PedidoItem>();
     }
 }

@@ -27,9 +27,9 @@ namespace ControleEstoque.Api.Controllers
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
 
-        // vvv ESTA LINHA ESTAVA FALTANDO vvv
+        
         private readonly IPasswordHasher<User> _passwordHasher;
-        // ^^^ ESTA LINHA ESTAVA FALTANDO ^^^
+      
 
         // O construtor PRECISA receber o passwordHasher
         public AuthController(AppDbContext context, IConfiguration configuration, IPasswordHasher<User> passwordHasher) // <-- PARÂMETRO ADICIONADO AQUI

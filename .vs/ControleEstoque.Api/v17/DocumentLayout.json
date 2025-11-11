@@ -3,12 +3,60 @@
   "WorkspaceRootPath": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\models\\produto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:models\\produto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\models\\fornecedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:models\\fornecedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\models\\notafiscalcompraitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:models\\notafiscalcompraitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\models\\notafiscalcompra.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:models\\notafiscalcompra.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\controllers\\fornecedorescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:controllers\\fornecedorescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\dtos\\pedidoitemcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:dtos\\pedidoitemcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\dtos\\pedidocreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:dtos\\pedidocreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\controllers\\pedidoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:controllers\\pedidoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\models\\pedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:models\\pedido.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\models\\pedidoitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:models\\pedidoitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\controllers\\produtoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:controllers\\produtoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\controllers\\relatorioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:controllers\\relatorioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,8 +66,177 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NotaFiscalCompraItem.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Models\\NotaFiscalCompraItem.cs",
+              "RelativeDocumentMoniker": "Models\\NotaFiscalCompraItem.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Models\\NotaFiscalCompraItem.cs",
+              "RelativeToolTip": "Models\\NotaFiscalCompraItem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-11T14:26:03.922Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NotaFiscalCompra.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\Source\\Repos\\ControleEstoqueApi\\Models\\NotaFiscalCompra.cs",
+              "RelativeDocumentMoniker": "Models\\NotaFiscalCompra.cs",
+              "ToolTip": "C:\\Users\\55519\\Source\\Repos\\ControleEstoqueApi\\Models\\NotaFiscalCompra.cs",
+              "RelativeToolTip": "Models\\NotaFiscalCompra.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-11T14:25:09.537Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Fornecedor.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Models\\Fornecedor.cs",
+              "RelativeDocumentMoniker": "Models\\Fornecedor.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Models\\Fornecedor.cs",
+              "RelativeToolTip": "Models\\Fornecedor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-11T14:17:47.871Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Produto.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Models\\Produto.cs",
+              "RelativeDocumentMoniker": "Models\\Produto.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Models\\Produto.cs",
+              "RelativeToolTip": "Models\\Produto.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAcwBcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T13:26:13.245Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "FornecedoresController.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\FornecedoresController.cs",
+              "RelativeDocumentMoniker": "Controllers\\FornecedoresController.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\FornecedoresController.cs",
+              "RelativeToolTip": "Controllers\\FornecedoresController.cs",
+              "ViewState": "AgIAAH4AAAAAAAAAAAAmwI4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-11T14:18:49.142Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PedidoItemCreateDto.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\DTOs\\PedidoItemCreateDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\PedidoItemCreateDto.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\DTOs\\PedidoItemCreateDto.cs",
+              "RelativeToolTip": "DTOs\\PedidoItemCreateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-11T11:51:28.197Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAA1wA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T13:55:32.88Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PedidoCreateDto.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\DTOs\\PedidoCreateDto.cs",
+              "RelativeDocumentMoniker": "DTOs\\PedidoCreateDto.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\DTOs\\PedidoCreateDto.cs",
+              "RelativeToolTip": "DTOs\\PedidoCreateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T15:03:33.08Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PedidosController.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\PedidosController.cs",
+              "RelativeDocumentMoniker": "Controllers\\PedidosController.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\PedidosController.cs",
+              "RelativeToolTip": "Controllers\\PedidosController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAPAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T14:42:01.572Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "Controllers\\UsersController.cs",
+              "ViewState": "AgIAAFcAAAAAAAAAAAAwwH0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T14:41:52.949Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Pedido.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Models\\Pedido.cs",
+              "RelativeDocumentMoniker": "Models\\Pedido.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Models\\Pedido.cs",
+              "RelativeToolTip": "Models\\Pedido.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T14:34:00.396Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "PedidoItem.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Models\\PedidoItem.cs",
+              "RelativeDocumentMoniker": "Models\\PedidoItem.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Models\\PedidoItem.cs",
+              "RelativeToolTip": "Models\\PedidoItem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T14:33:34.763Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ProdutosController.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\ProdutosController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ProdutosController.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\ProdutosController.cs",
+              "RelativeToolTip": "Controllers\\ProdutosController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKIAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T14:27:12.929Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
@@ -34,28 +251,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Dockerfile",
-              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Dockerfile",
-              "RelativeDocumentMoniker": "Dockerfile",
-              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Dockerfile",
-              "RelativeToolTip": "Dockerfile",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-11-05T01:06:21.627Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAEoAAAAAAAAAAAAcwK0AAAAlAAAAAAAAAA==",
+              "DocumentIndex": 13,
+              "Title": "RelatoriosController.cs",
+              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\RelatoriosController.cs",
+              "RelativeDocumentMoniker": "Controllers\\RelatoriosController.cs",
+              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\RelatoriosController.cs",
+              "RelativeToolTip": "Controllers\\RelatoriosController.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAB8AAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-04T13:01:25.852Z",
+              "WhenOpened": "2025-11-10T13:56:43.401Z",
               "EditorCaption": ""
             }
           ]

@@ -1,10 +1,13 @@
 ﻿using ControleEstoque.Api.Data;
-using ControleEstoque.Api.DTOs;
 using ControleEstoque.Api.Models;
+using ControleEstoque.Api.DTOs; // Importa os novos DTOs
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq; // Necessário para Any() e Include()
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ControleEstoque.Api.Controllers
@@ -15,161 +18,224 @@ namespace ControleEstoque.Api.Controllers
     public class PedidosController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<PedidosController> _logger;
 
-        // Injeta o AppDbContext
-        public PedidosController(AppDbContext context)
+        // Injeta o Logger
+        public PedidosController(AppDbContext context, ILogger<PedidosController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
-        // GET: api/pedidos
+        // GET: api/pedidos (Mostra cabeçalho, cliente, itens e produtos dos itens)
         [HttpGet]
         public async Task<ActionResult<List<Pedido>>> GetPedidos()
         {
-            // Retorna a lista de pedidos. Considerar incluir dados do Cliente/Produto se necessário.
-            // Ex: return await _context.Pedidos.Include(p => p.Cliente).Include(p => p.Produto).ToListAsync();
-            return await _context.Pedidos.ToListAsync();
+            try
+            {
+                var pedidos = await _context.Pedidos
+                                    .Include(p => p.Cliente) // Inclui o Cliente
+                                    .Include(p => p.PedidoItens) // Inclui a lista de Itens
+                                        .ThenInclude(pi => pi.Produto) // Para cada Item, inclui o Produto
+                                    .AsNoTracking() // Opcional: melhora performance de leitura
+                                    .ToListAsync();
+                return Ok(pedidos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao buscar a lista de pedidos.");
+                return StatusCode(500, "Erro interno do servidor.");
+            }
         }
 
         // GET: api/pedidos/{id}
         [HttpGet("{id}", Name = "GetPedido")]
         public async Task<ActionResult<Pedido>> GetPedido(int id)
         {
-            // Busca o pedido E inclui os dados do Cliente e Produto relacionados
-            var pedido = await _context.Pedidos
-                                       .Include(p => p.Cliente) // Inclui dados do Cliente
-                                       .Include(p => p.Produto) // Inclui dados do Produto
-                                       .FirstOrDefaultAsync(p => p.Id == id); // Busca pelo ID
-
-            if (pedido == null)
+            try
             {
-                return NotFound($"Pedido com ID {id} não encontrado.");
-            }
+                var pedido = await _context.Pedidos
+                                    .Include(p => p.Cliente)
+                                    .Include(p => p.PedidoItens)
+                                        .ThenInclude(pi => pi.Produto)
+                                    .AsNoTracking()
+                                    .FirstOrDefaultAsync(p => p.Id == id);
 
-            // Retorna o pedido com os detalhes do cliente e produto
-            return pedido;
+                if (pedido == null)
+                {
+                    return NotFound($"Pedido com ID {id} não encontrado.");
+                }
+                return Ok(pedido);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Erro ao buscar o pedido com ID {id}.");
+                return StatusCode(500, "Erro interno do servidor.");
+            }
         }
 
-        // POST: api/pedidos
+        // POST: api/pedidos (Lógica de Múltiplos Itens)
         [HttpPost]
-        // Alterado para receber o DTO
         public async Task<ActionResult<Pedido>> CriarPedido([FromBody] PedidoCreateDto pedidoDto)
         {
-            // A validação agora usa os atributos do DTO
-            if (!ModelState.IsValid)
+            // Valida o DTO (ClienteId e se a lista de Itens não está vazia)
+            if (!ModelState.IsValid || !pedidoDto.Itens.Any())
             {
-                // Retorna os erros detalhados do DTO
-                return BadRequest(new ValidationProblemDetails(ModelState)
+                return BadRequest("Dados do pedido inválidos ou nenhum item fornecido.");
+            }
+
+            // Inicia uma Transação de Banco de Dados
+            // Isso garante que ou TUDO funciona (pedido + baixa de estoque), ou NADA é salvo.
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // 1. Criar o Cabeçalho do Pedido
+                var novoPedido = new Pedido
                 {
-                    Title = "Um ou mais erros de validação ocorreram no DTO.",
-                    Detail = "Verifique os erros no campo 'errors'."
-                });
+                    ClienteId = pedidoDto.ClienteId,
+                    DataPedido = DateTime.UtcNow, // Define a data atual
+                    Status = "Pendente"
+                };
+                await _context.Pedidos.AddAsync(novoPedido);
+                // Salva o cabeçalho primeiro para obter o 'novoPedido.Id'
+                await _context.SaveChangesAsync();
+
+                var listaPedidoItens = new List<PedidoItem>();
+
+                // 2. Processar cada Item do "Carrinho"
+                foreach (var itemDto in pedidoDto.Itens)
+                {
+                    // 2a. Buscar o produto no banco
+                    var produtoEstoque = await _context.Produtos.FindAsync(itemDto.ProdutoId);
+
+                    // 2b. Validar (Produto existe? Tem estoque?)
+                    if (produtoEstoque == null)
+                    {
+                        await transaction.RollbackAsync(); // Desfaz o pedido
+                        return BadRequest($"Produto com ID {itemDto.ProdutoId} não encontrado.");
+                    }
+                    if (produtoEstoque.Quantidade < itemDto.Quantidade)
+                    {
+                        await transaction.RollbackAsync(); // Desfaz o pedido
+                        return BadRequest($"Estoque insuficiente para o produto '{produtoEstoque.Nome}'. Disponível: {produtoEstoque.Quantidade}.");
+                    }
+
+                    // 2c. Deduzir do estoque
+                    produtoEstoque.Quantidade -= itemDto.Quantidade;
+                    _context.Entry(produtoEstoque).State = EntityState.Modified;
+
+                    // 2d. Criar o PedidoItem
+                    var novoPedidoItem = new PedidoItem
+                    {
+                        PedidoId = novoPedido.Id, // Associa ao cabeçalho que acabamos de criar
+                        ProdutoId = itemDto.ProdutoId,
+                        Quantidade = itemDto.Quantidade,
+                        PrecoUnitarioVenda = produtoEstoque.PrecoVenda // "Congela" o preço de venda
+                    };
+                    listaPedidoItens.Add(novoPedidoItem);
+                }
+
+                // 3. Adicionar todos os itens ao contexto
+                await _context.PedidoItens.AddRangeAsync(listaPedidoItens);
+
+                // 4. Salvar todas as mudanças (baixa de estoque E criação dos PedidoItens)
+                await _context.SaveChangesAsync();
+
+                // 5. Se tudo deu certo, "Commita" a transação
+                await transaction.CommitAsync();
+
+                // 6. Retorna o pedido completo
+                var pedidoCriado = await _context.Pedidos
+                                         .Include(p => p.Cliente)
+                                         .Include(p => p.PedidoItens)
+                                             .ThenInclude(pi => pi.Produto)
+                                         .AsNoTracking()
+                                         .FirstOrDefaultAsync(p => p.Id == novoPedido.Id);
+
+                return CreatedAtAction(nameof(GetPedido), new { id = novoPedido.Id }, pedidoCriado);
             }
-
-            // --- VERIFICAÇÃO DE ESTOQUE ---
-            var produtoEstoque = await _context.Produtos.FindAsync(pedidoDto.ProdutoId);
-
-            if (produtoEstoque == null)
+            catch (Exception ex)
             {
-                ModelState.AddModelError(nameof(pedidoDto.ProdutoId), $"Produto com ID {pedidoDto.ProdutoId} não encontrado.");
-                return BadRequest(new ValidationProblemDetails(ModelState));
+                // 5b. Se qualquer coisa falhar (ex: erro de banco), "Reverte" a transação
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Erro inesperado ao criar pedido.");
+                return StatusCode(500, "Erro interno ao processar o pedido.");
             }
-
-            if (produtoEstoque.Quantidade < pedidoDto.QuantidadeProduto)
-            {
-                ModelState.AddModelError(nameof(pedidoDto.QuantidadeProduto), $"Estoque insuficiente para o produto '{produtoEstoque.Nome}'. Disponível: {produtoEstoque.Quantidade}.");
-                return BadRequest(new ValidationProblemDetails(ModelState));
-            }
-
-            // --- ATUALIZAÇÃO DO ESTOQUE ---
-            produtoEstoque.Quantidade -= pedidoDto.QuantidadeProduto;
-            _context.Entry(produtoEstoque).State = EntityState.Modified;
-
-            // --- CRIAÇÃO DO PEDIDO (Mapeando do DTO para a Entidade) ---
-            var novoPedido = new Pedido
-            {
-                ProdutoId = pedidoDto.ProdutoId,
-                ClienteId = pedidoDto.ClienteId,
-                QuantidadeProduto = pedidoDto.QuantidadeProduto
-                // O EF Core cuidará de associar aos objetos Cliente e Produto pelo ID
-            };
-
-            await _context.Pedidos.AddAsync(novoPedido);
-            await _context.SaveChangesAsync();
-
-            // Busca o pedido recém-criado incluindo Cliente e Produto para retornar ao front-end
-            var pedidoCriado = await _context.Pedidos
-                                            .Include(p => p.Cliente)
-                                            .Include(p => p.Produto)
-                                            .FirstOrDefaultAsync(p => p.Id == novoPedido.Id);
-
-            // Retorna 201 Created com o pedido completo (incluindo objetos Cliente/Produto)
-            return CreatedAtAction(nameof(GetPedido), new { id = novoPedido.Id }, pedidoCriado);
         }
 
-        // PUT: api/pedidos/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> AtualizarPedido(int id, [FromBody] Pedido pedidoAtualizado)
+        // PUT: api/pedidos/{id}/status (Ex: Mudar para "Concluído")
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> AtualizarStatusPedido(int id, [FromBody] string status)
         {
-            if (id != pedidoAtualizado.Id)
+            if (string.IsNullOrWhiteSpace(status))
             {
-                return BadRequest("O ID da URL não corresponde ao ID do pedido fornecido.");
+                return BadRequest("O status não pode ser nulo ou vazio.");
             }
-
-            // ATENÇÃO: Atualizar um pedido PODE exigir lógica complexa para
-            // reajustar o estoque (devolver estoque antigo, retirar novo estoque).
-            // Por simplicidade, este exemplo apenas atualiza os dados do pedido.
-            // Verifique se ClienteId e ProdutoId enviados existem, se necessário.
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            _context.Entry(pedidoAtualizado).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Pedidos.Any(e => e.Id == id))
+                var pedido = await _context.Pedidos.FindAsync(id);
+                if (pedido == null)
                 {
-                    return NotFound($"Pedido com ID {id} não encontrado para atualização.");
+                    return NotFound($"Pedido com ID {id} não encontrado.");
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return NoContent();
+                pedido.Status = status;
+                _context.Entry(pedido).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Erro ao atualizar status do pedido ID {id}.");
+                return StatusCode(500, "Erro interno do servidor.");
+            }
         }
 
-        // DELETE: api/pedidos/{id}
+        // DELETE: api/pedidos/{id} (Devolve estoque ao cancelar)
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarPedido(int id)
         {
-            var pedido = await _context.Pedidos.FindAsync(id);
-            if (pedido == null)
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                return NotFound($"Pedido com ID {id} não encontrado para exclusão.");
+                var pedido = await _context.Pedidos
+                                     .Include(p => p.PedidoItens) // PRECISA incluir os itens
+                                     .FirstOrDefaultAsync(p => p.Id == id);
+
+                if (pedido == null)
+                {
+                    return NotFound($"Pedido com ID {id} não encontrado.");
+                }
+
+                // Lógica de Negócio: Devolver os itens ao estoque
+                foreach (var item in pedido.PedidoItens)
+                {
+                    var produtoEstoque = await _context.Produtos.FindAsync(item.ProdutoId);
+                    if (produtoEstoque != null)
+                    {
+                        produtoEstoque.Quantidade += item.Quantidade;
+                        _context.Entry(produtoEstoque).State = EntityState.Modified;
+                    }
+                }
+
+                // Remove os PedidoItens
+                _context.PedidoItens.RemoveRange(pedido.PedidoItens);
+                // Remove o Pedido (cabeçalho)
+                _context.Pedidos.Remove(pedido);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return NoContent();
             }
-
-            // ATENÇÃO: Ao deletar um pedido, você PODE querer restaurar
-            // a quantidade do produto no estoque. Esta lógica não está incluída aqui.
-            // Exemplo (requer buscar o produto):
-            // var produto = await _context.Produtos.FindAsync(pedido.ProdutoId);
-            // if (produto != null) {
-            //     produto.Quantidade += pedido.QuantidadeProduto;
-            //     _context.Entry(produto).State = EntityState.Modified;
-            // }
-
-            _context.Pedidos.Remove(pedido);
-            await _context.SaveChangesAsync(); // Salvaria a remoção do pedido e a atualização do estoque
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, $"Erro ao deletar o pedido ID {id}.");
+                return StatusCode(500, "Erro interno ao deletar o pedido.");
+            }
         }
     }
 }

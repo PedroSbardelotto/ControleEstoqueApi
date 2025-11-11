@@ -6,8 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using ControleEstoque.Api.Models;
+// Adicionar este using para OpenApiReference
 using Microsoft.OpenApi.Models;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +17,9 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         policy =>
         {
-            policy.AllowAnyOrigin()
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+            policy.AllowAnyOrigin()   // Permite qualquer origem
+                  .AllowAnyHeader()   // Permite cabeçalhos
+                  .AllowAnyMethod();  // Permite métodos
         });
 });
 // --- FIM CORS ---
@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
 // --- Configuração do Banco de Dados ---
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseSqlServer(connectionString)); // Configurado para SQL Server
 // --- FIM Configuração do Banco de Dados ---
 
 
@@ -55,8 +55,35 @@ builder.Services.AddAuthentication(options =>
 // --- Configuração do Swagger para entender JWT ---
 builder.Services.AddSwaggerGen(options =>
 {
-    // ... (Toda a sua configuração AddSecurityDefinition e AddSecurityRequirement vai aqui) ...
-    // (Omitido para encurtar, mas mantenha o seu código de Swagger que já funciona)
+    // 1. Define o esquema de segurança
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Insira 'Bearer' [espaço] e então o seu token no campo abaixo.\n\nExemplo: \"Bearer 12345abcdef\""
+    });
+
+    // 2. Adiciona a exigência de autorização
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header
+            },
+            new List<string>()
+        }
+    });
 });
 // --- FIM Configuração do Swagger ---
 
@@ -64,6 +91,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
+        // Esta opção diz ao serializador para ignorar ciclos
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
@@ -72,71 +100,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
-// --- INÍCIO: MIGRAÇÃO E SEED AUTOMÁTICOS ---
-// Esta função será chamada para preparar o banco de dados
-await ApplyMigrationAndSeedDataAsync(app);
-
-async Task ApplyMigrationAndSeedDataAsync(WebApplication app)
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var services = scope.ServiceProvider;
-        var logger = services.GetRequiredService<ILogger<Program>>();
-
-        try
-        {
-            var context = services.GetRequiredService<AppDbContext>();
-            var passwordHasher = services.GetRequiredService<IPasswordHasher<User>>();
-            var configuration = services.GetRequiredService<IConfiguration>();
-
-            // --- ETAPA 1: APLICAR MIGRAÇÕES ---
-            logger.LogInformation("Verificando e aplicando migrações do banco de dados...");
-            await context.Database.MigrateAsync(); // <-- ISSO RODA O EQUIVALENTE A 'dotnet ef database update'
-            logger.LogInformation("Migrações aplicadas com sucesso.");
-
-            // --- ETAPA 2: SEMEAR USUÁRIO ADMIN ---
-            if (!await context.Usuarios.AnyAsync())
-            {
-                logger.LogInformation("Banco de dados de usuários vazio. Criando usuário Admin padrão...");
-
-                var adminEmail = configuration["ADMIN_EMAIL"];
-                var adminPassword = configuration["ADMIN_PASSWORD"];
-
-                if (string.IsNullOrEmpty(adminEmail) || string.IsNullOrEmpty(adminPassword))
-                {
-                    logger.LogError("ADMIN_EMAIL ou ADMIN_PASSWORD não configurados. Usuário Admin não pode ser criado.");
-                }
-                else
-                {
-                    var adminUser = new User
-                    {
-                        Nome = "Administrador",
-                        Email = adminEmail,
-                        Tipo = "Admin",
-                        Status = true
-                    };
-                    adminUser.Senha = passwordHasher.HashPassword(adminUser, adminPassword);
-
-                    await context.Usuarios.AddAsync(adminUser);
-                    await context.SaveChangesAsync();
-
-                    logger.LogInformation("Usuário Admin padrão criado com sucesso.");
-                }
-            }
-            else
-            {
-                logger.LogInformation("Banco de dados já contém usuários. Seed do Admin ignorado.");
-            }
-        }
-        catch (Exception ex)
-        {
-            // Loga o erro se a migração ou o seed falharem
-            logger.LogError(ex, "Ocorreu um erro ao tentar migrar ou semear o banco de dados.");
-            // (Em um cenário de produção real, você pode querer decidir se a app deve parar aqui)
-        }
-    }
-}
-// --- FIM: MIGRAÇÃO E SEED AUTOMÁTICOS ---
+// --- BLOCO DE SEED AUTOMÁTICO REMOVIDO ---
 
 
 // Configura o pipeline de requisições HTTP.

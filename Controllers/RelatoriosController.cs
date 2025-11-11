@@ -29,8 +29,7 @@ namespace ControleEstoque.Api.Controllers
 
             // Calcula o valor total do estoque (Preço * Quantidade para cada produto, depois soma tudo)
             decimal valorTotalEstoque = await _context.Produtos
-                                             .SumAsync(p => p.Preco * p.Quantidade); // LINQ faz a mágica!
-
+                                     .SumAsync(p => p.PrecoVenda * p.Quantidade); 
             // Cria o objeto de resposta (DTO)
             var resultado = new VisaoGeralEstoqueDto
             {

@@ -9,33 +9,30 @@ namespace ControleEstoque.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    // [Authorize] // Deixado comentado para você poder criar o primeiro Admin
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;
-
-
         private readonly IPasswordHasher<User> _passwordHasher;
 
-
-        // O construtor PRECISA receber o passwordHasher
-        public UsersController(AppDbContext context, IPasswordHasher<User> passwordHasher) // <-- PARÂMETRO ADICIONADO AQUI
+        public UsersController(AppDbContext context, IPasswordHasher<User> passwordHasher)
         {
             _context = context;
-            _passwordHasher = passwordHasher; // Agora esta linha funciona
+            _passwordHasher = passwordHasher;
         }
 
         // GET: api/users
         [HttpGet]
-        [Authorize]
+        [Authorize] // Protegendo o GET geral
         public async Task<ActionResult<List<User>>> GetUsers()
         {
+            // ATENÇÃO: Retorna usuários COM senha (inseguro). Idealmente usar um DTO.
             return await _context.Usuarios.ToListAsync();
         }
 
         // GET: api/users/{id}
         [HttpGet("{id}", Name = "GetUser")]
-        [Authorize]
+        [Authorize] // Protegendo o GET por ID
         public async Task<ActionResult<User>> GetUser(int id)
         {
             var user = await _context.Usuarios.FindAsync(id);
@@ -44,12 +41,13 @@ namespace ControleEstoque.Api.Controllers
             {
                 return NotFound($"Usuário com ID {id} não encontrado.");
             }
+            // ATENÇÃO: Retorna usuário COM senha (inseguro). Idealmente usar um DTO.
             return user;
         }
 
         // POST: api/users
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")] // Mantenha comentado por enquanto
         public async Task<ActionResult<User>> CriarUser([FromBody] User novoUser)
         {
             if (!ModelState.IsValid)
@@ -57,22 +55,22 @@ namespace ControleEstoque.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            // --- CORREÇÃO DE SEGURANÇA ---
-            // Esta linha agora funciona
+            // --- HASHING DE SENHA ---
             novoUser.Senha = _passwordHasher.HashPassword(novoUser, novoUser.Senha);
-            // --- FIM DA CORREÇÃO DE SEGURANÇA ---
 
+            // Garante que o novo usuário seja 'Ativo'
             novoUser.Status = true;
 
             await _context.Usuarios.AddAsync(novoUser);
             await _context.SaveChangesAsync();
 
+            // ATENÇÃO: Retorna usuário COM senha (inseguro). Idealmente usar um DTO.
             return CreatedAtAction(nameof(GetUser), new { id = novoUser.Id }, novoUser);
         }
 
         // PUT: api/users/{id}
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize] // Protegendo a atualização
         public async Task<IActionResult> AtualizarUser(int id, [FromBody] User userAtualizado)
         {
             if (id != userAtualizado.Id)
@@ -85,9 +83,7 @@ namespace ControleEstoque.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            // --- CONSIDERAÇÃO DE SEGURANÇA ---
             // (Lógica de hashing de senha na atualização precisará ser adicionada aqui no futuro)
-            // --- FIM DA CONSIDERAÇÃO ---
 
             _context.Entry(userAtualizado).State = EntityState.Modified;
 
@@ -112,7 +108,7 @@ namespace ControleEstoque.Api.Controllers
 
         // DELETE: api/users/{id}
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")] // Somente Admins podem deletar usuários
         public async Task<IActionResult> DeletarUser(int id)
         {
             var user = await _context.Usuarios.FindAsync(id);
