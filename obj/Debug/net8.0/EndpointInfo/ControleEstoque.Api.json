@@ -222,6 +222,281 @@
         }
       }
     },
+    "/api/Fornecedores": {
+      "get": {
+        "tags": [
+          "Fornecedores"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Fornecedor"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Fornecedor"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Fornecedor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Fornecedores"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Fornecedor"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Fornecedor"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Fornecedor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Fornecedor"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Fornecedor"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Fornecedor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Fornecedores/{id}": {
+      "get": {
+        "tags": [
+          "Fornecedores"
+        ],
+        "operationId": "GetFornecedor",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Fornecedor"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Fornecedor"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Fornecedor"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Fornecedores"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Fornecedor"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Fornecedor"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Fornecedor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Fornecedores"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NotaFiscalCompra": {
+      "post": {
+        "tags": [
+          "NotaFiscalCompra"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotaFiscalCompraCreateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotaFiscalCompraCreateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotaFiscalCompraCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotaFiscalCompra"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotaFiscalCompra"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotaFiscalCompra"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/NotaFiscalCompra/{id}": {
+      "get": {
+        "tags": [
+          "NotaFiscalCompra"
+        ],
+        "operationId": "GetNotaFiscalCompra",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotaFiscalCompra"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotaFiscalCompra"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotaFiscalCompra"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Pedidos": {
       "get": {
         "tags": [
@@ -235,7 +510,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Pedido"
+                    "$ref": "#/components/schemas/PedidoListDto"
                   }
                 }
               },
@@ -243,7 +518,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Pedido"
+                    "$ref": "#/components/schemas/PedidoListDto"
                   }
                 }
               },
@@ -251,7 +526,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Pedido"
+                    "$ref": "#/components/schemas/PedidoListDto"
                   }
                 }
               }
@@ -346,6 +621,29 @@
           }
         }
       },
+      "delete": {
+        "tags": [
+          "Pedidos"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Pedidos/{id}/status": {
       "put": {
         "tags": [
           "Pedidos"
@@ -365,42 +663,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Pedido"
+                "type": "string"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Pedido"
+                "type": "string"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Pedido"
+                "type": "string"
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Pedidos"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -884,6 +1161,43 @@
         },
         "additionalProperties": false
       },
+      "Fornecedor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "cnpj": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "telefone": {
+            "type": "string",
+            "nullable": true
+          },
+          "endereco": {
+            "type": "string",
+            "nullable": true
+          },
+          "notasFiscaisCompra": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotaFiscalCompra"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginModel": {
         "type": "object",
         "properties": {
@@ -898,12 +1212,84 @@
         },
         "additionalProperties": false
       },
-      "Pedido": {
+      "NotaFiscalCompra": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int32"
+          },
+          "fornecedorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fornecedor": {
+            "$ref": "#/components/schemas/Fornecedor"
+          },
+          "numeroNota": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataEmissao": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "valorTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "itens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotaFiscalCompraItem"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NotaFiscalCompraCreateDto": {
+        "required": [
+          "fornecedorId",
+          "itens",
+          "numeroNota"
+        ],
+        "type": "object",
+        "properties": {
+          "fornecedorId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numeroNota": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "dataEmissao": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "itens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotaFiscalItemCreateDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "NotaFiscalCompraItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notaFiscalCompraId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notaFiscalCompra": {
+            "$ref": "#/components/schemas/NotaFiscalCompra"
           },
           "produtoId": {
             "type": "integer",
@@ -912,6 +1298,42 @@
           "produto": {
             "$ref": "#/components/schemas/Produto"
           },
+          "quantidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "precoCustoUnitario": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NotaFiscalItemCreateDto": {
+        "type": "object",
+        "properties": {
+          "produtoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quantidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "precoCustoUnitario": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Pedido": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
           "clienteId": {
             "type": "integer",
             "format": "int32"
@@ -919,9 +1341,20 @@
           "cliente": {
             "$ref": "#/components/schemas/Cliente"
           },
-          "quantidadeProduto": {
-            "type": "integer",
-            "format": "int32"
+          "dataPedido": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "pedidoItens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PedidoItem"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -929,8 +1362,62 @@
       "PedidoCreateDto": {
         "required": [
           "clienteId",
+          "itens"
+        ],
+        "type": "object",
+        "properties": {
+          "clienteId": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "itens": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PedidoItemCreateDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PedidoItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pedidoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pedido": {
+            "$ref": "#/components/schemas/Pedido"
+          },
+          "produtoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "produto": {
+            "$ref": "#/components/schemas/Produto"
+          },
+          "quantidade": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "precoUnitarioVenda": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PedidoItemCreateDto": {
+        "required": [
           "produtoId",
-          "quantidadeProduto"
+          "quantidade"
         ],
         "type": "object",
         "properties": {
@@ -940,17 +1427,33 @@
             "type": "integer",
             "format": "int32"
           },
-          "clienteId": {
+          "quantidade": {
             "maximum": 2147483647,
             "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PedidoListDto": {
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
-          "quantidadeProduto": {
-            "maximum": 2147483647,
-            "minimum": 1,
-            "type": "integer",
-            "format": "int32"
+          "dataPedido": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nomeCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "valorTotal": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -974,7 +1477,11 @@
             "type": "string",
             "nullable": true
           },
-          "preco": {
+          "precoVenda": {
+            "type": "number",
+            "format": "double"
+          },
+          "precoCusto": {
             "type": "number",
             "format": "double"
           },
@@ -983,10 +1490,17 @@
             "nullable": true,
             "readOnly": true
           },
-          "pedidos": {
+          "pedidoItens": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Pedido"
+              "$ref": "#/components/schemas/PedidoItem"
+            },
+            "nullable": true
+          },
+          "notaFiscalCompraItens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotaFiscalCompraItem"
             },
             "nullable": true
           }

@@ -9,7 +9,7 @@ namespace ControleEstoque.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    // [Authorize] // Deixado comentado para você poder criar o primeiro Admin
+    [Authorize] // Deixado comentado para você poder criar o primeiro Admin
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -47,7 +47,7 @@ namespace ControleEstoque.Api.Controllers
 
         // POST: api/users
         [HttpPost]
-        // [Authorize(Roles = "Admin")] // Mantenha comentado por enquanto
+        [Authorize(Roles = "Admin")] // Mantenha comentado por enquanto
         public async Task<ActionResult<User>> CriarUser([FromBody] User novoUser)
         {
             if (!ModelState.IsValid)

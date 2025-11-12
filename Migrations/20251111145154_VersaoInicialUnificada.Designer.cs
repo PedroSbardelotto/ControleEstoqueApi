@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControleEstoque.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251111142238_AdicionaTabelaFornecedores")]
-    partial class AdicionaTabelaFornecedores
+    [Migration("20251111145154_VersaoInicialUnificada")]
+    partial class VersaoInicialUnificada
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,6 +85,63 @@ namespace ControleEstoque.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Fornecedores");
+                });
+
+            modelBuilder.Entity("ControleEstoque.Api.Models.NotaFiscalCompra", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataEmissao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FornecedorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NumeroNota")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("ValorTotal")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FornecedorId");
+
+                    b.ToTable("NotaFiscalCompra");
+                });
+
+            modelBuilder.Entity("ControleEstoque.Api.Models.NotaFiscalCompraItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("NotaFiscalCompraId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PrecoCustoUnitario")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NotaFiscalCompraId");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.ToTable("NotaFiscalCompraItem");
                 });
 
             modelBuilder.Entity("ControleEstoque.Api.Models.Pedido", b =>
@@ -203,6 +260,36 @@ namespace ControleEstoque.Api.Migrations
                     b.ToTable("Usuarios");
                 });
 
+            modelBuilder.Entity("ControleEstoque.Api.Models.NotaFiscalCompra", b =>
+                {
+                    b.HasOne("ControleEstoque.Api.Models.Fornecedor", "Fornecedor")
+                        .WithMany("NotasFiscaisCompra")
+                        .HasForeignKey("FornecedorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Fornecedor");
+                });
+
+            modelBuilder.Entity("ControleEstoque.Api.Models.NotaFiscalCompraItem", b =>
+                {
+                    b.HasOne("ControleEstoque.Api.Models.NotaFiscalCompra", "NotaFiscalCompra")
+                        .WithMany("Itens")
+                        .HasForeignKey("NotaFiscalCompraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ControleEstoque.Api.Models.Produto", "Produto")
+                        .WithMany("NotaFiscalCompraItens")
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("NotaFiscalCompra");
+
+                    b.Navigation("Produto");
+                });
+
             modelBuilder.Entity("ControleEstoque.Api.Models.Pedido", b =>
                 {
                     b.HasOne("ControleEstoque.Api.Models.Cliente", "Cliente")
@@ -238,6 +325,16 @@ namespace ControleEstoque.Api.Migrations
                     b.Navigation("Pedidos");
                 });
 
+            modelBuilder.Entity("ControleEstoque.Api.Models.Fornecedor", b =>
+                {
+                    b.Navigation("NotasFiscaisCompra");
+                });
+
+            modelBuilder.Entity("ControleEstoque.Api.Models.NotaFiscalCompra", b =>
+                {
+                    b.Navigation("Itens");
+                });
+
             modelBuilder.Entity("ControleEstoque.Api.Models.Pedido", b =>
                 {
                     b.Navigation("PedidoItens");
@@ -245,6 +342,8 @@ namespace ControleEstoque.Api.Migrations
 
             modelBuilder.Entity("ControleEstoque.Api.Models.Produto", b =>
                 {
+                    b.Navigation("NotaFiscalCompraItens");
+
                     b.Navigation("PedidoItens");
                 });
 #pragma warning restore 612, 618

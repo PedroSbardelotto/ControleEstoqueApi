@@ -29,17 +29,26 @@ namespace ControleEstoque.Api.Controllers
 
         // GET: api/pedidos (Mostra cabeçalho, cliente, itens e produtos dos itens)
         [HttpGet]
-        public async Task<ActionResult<List<Pedido>>> GetPedidos()
+        public async Task<ActionResult<List<PedidoListDto>>> GetPedidos()
         {
             try
             {
                 var pedidos = await _context.Pedidos
-                                    .Include(p => p.Cliente) // Inclui o Cliente
-                                    .Include(p => p.PedidoItens) // Inclui a lista de Itens
-                                        .ThenInclude(pi => pi.Produto) // Para cada Item, inclui o Produto
-                                    .AsNoTracking() // Opcional: melhora performance de leitura
+                                    .Include(p => p.Cliente)
+                                    .Include(p => p.PedidoItens)
+                                    .AsNoTracking()
                                     .ToListAsync();
-                return Ok(pedidos);
+
+                var pedidosDto = pedidos.Select(p => new PedidoListDto
+                {
+                    Id = p.Id,
+                    DataPedido = p.DataPedido,
+                    // Status = p.Status, // <-- LINHA REMOVIDA
+                    NomeCliente = p.Cliente.Nome,
+                    ValorTotal = p.PedidoItens.Sum(item => item.Quantidade * item.PrecoUnitarioVenda)
+                }).ToList();
+
+                return Ok(pedidosDto);
             }
             catch (Exception ex)
             {

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ControleEstoque.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class VersaoInicialSqlServer : Migration
+    public partial class VersaoInicialUnificada : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,6 +25,23 @@ namespace ControleEstoque.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Clientes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Fornecedores",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Cnpj = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Telefone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Endereco = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Fornecedores", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,6 +100,28 @@ namespace ControleEstoque.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "NotaFiscalCompra",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FornecedorId = table.Column<int>(type: "int", nullable: false),
+                    NumeroNota = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DataEmissao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ValorTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NotaFiscalCompra", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NotaFiscalCompra_Fornecedores_FornecedorId",
+                        column: x => x.FornecedorId,
+                        principalTable: "Fornecedores",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PedidoItens",
                 columns: table => new
                 {
@@ -110,6 +149,49 @@ namespace ControleEstoque.Api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "NotaFiscalCompraItem",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NotaFiscalCompraId = table.Column<int>(type: "int", nullable: false),
+                    ProdutoId = table.Column<int>(type: "int", nullable: false),
+                    Quantidade = table.Column<int>(type: "int", nullable: false),
+                    PrecoCustoUnitario = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NotaFiscalCompraItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_NotaFiscalCompraItem_NotaFiscalCompra_NotaFiscalCompraId",
+                        column: x => x.NotaFiscalCompraId,
+                        principalTable: "NotaFiscalCompra",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_NotaFiscalCompraItem_Produtos_ProdutoId",
+                        column: x => x.ProdutoId,
+                        principalTable: "Produtos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotaFiscalCompra_FornecedorId",
+                table: "NotaFiscalCompra",
+                column: "FornecedorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotaFiscalCompraItem_NotaFiscalCompraId",
+                table: "NotaFiscalCompraItem",
+                column: "NotaFiscalCompraId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotaFiscalCompraItem_ProdutoId",
+                table: "NotaFiscalCompraItem",
+                column: "ProdutoId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_PedidoItens_PedidoId",
                 table: "PedidoItens",
@@ -130,16 +212,25 @@ namespace ControleEstoque.Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "NotaFiscalCompraItem");
+
+            migrationBuilder.DropTable(
                 name: "PedidoItens");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");
 
             migrationBuilder.DropTable(
+                name: "NotaFiscalCompra");
+
+            migrationBuilder.DropTable(
                 name: "Pedidos");
 
             migrationBuilder.DropTable(
                 name: "Produtos");
+
+            migrationBuilder.DropTable(
+                name: "Fornecedores");
 
             migrationBuilder.DropTable(
                 name: "Clientes");

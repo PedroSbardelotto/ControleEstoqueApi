@@ -17,6 +17,8 @@ namespace ControleEstoque.Api.Data
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<Fornecedor> Fornecedores { get; set; }
+        public DbSet<NotaFiscalCompra> NotasFiscaisCompra { get; set; }
+        public DbSet<NotaFiscalCompraItem> NotasFiscaisCompraItens { get; set; }
 
         // Sobrescrevemos este método para configurar os modelos
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,6 +42,15 @@ namespace ControleEstoque.Api.Data
                 entity.Property(p => p.PrecoUnitarioVenda).HasColumnType("decimal(18, 2)");
             });
 
+            modelBuilder.Entity<NotaFiscalCompraItem>(entity =>
+            {
+                entity.Property(p => p.PrecoCustoUnitario).HasColumnType("decimal(18, 2)");
+            });
+
+            modelBuilder.Entity<NotaFiscalCompra>(entity =>
+            {
+                entity.Property(p => p.ValorTotal).HasColumnType("decimal(18, 2)");
+            });
             // (Não é estritamente necessário, mas bom para garantir)
             // Configura as chaves estrangeiras de PedidoItem
             modelBuilder.Entity<PedidoItem>()
