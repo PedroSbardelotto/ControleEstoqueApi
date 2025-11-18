@@ -13,7 +13,7 @@ namespace ControleEstoque.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")] // Apenas Admins podem gerenciar fornecedores
+    [Authorize] // Protegido, mas sem role específica
     public class FornecedoresController : ControllerBase
     {
         private readonly AppDbContext _context;

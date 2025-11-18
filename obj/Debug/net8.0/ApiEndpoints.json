@@ -263,6 +263,26 @@
   },
   {
     "ContainingType": "ControleEstoque.Api.Controllers.NotaFiscalCompraController",
+    "Method": "GetNotasFiscais",
+    "RelativePath": "api/NotaFiscalCompra",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[ControleEstoque.Api.DTOs.NotaFiscalListDto, ControleEstoque.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "ControleEstoque.Api.Controllers.NotaFiscalCompraController",
     "Method": "GetNotaFiscalCompra",
     "RelativePath": "api/NotaFiscalCompra/{id}",
     "HttpMethod": "GET",
@@ -295,7 +315,13 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "status",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.List\u00601[[ControleEstoque.Api.DTOs.PedidoListDto, ControleEstoque.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
@@ -510,6 +536,32 @@
   },
   {
     "ContainingType": "ControleEstoque.Api.Controllers.RelatoriosController",
+    "Method": "GetDiasComSaidaDeEstoque",
+    "RelativePath": "api/Relatorios/estoque/diascomsaida",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ControleEstoque.Api.Controllers.RelatoriosController",
+    "Method": "GetItensParados",
+    "RelativePath": "api/Relatorios/estoque/itensparados",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dias",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ControleEstoque.Api.Controllers.RelatoriosController",
     "Method": "GetVisaoGeralEstoque",
     "RelativePath": "api/Relatorios/estoque/visaogeral",
     "HttpMethod": "GET",
@@ -527,6 +579,46 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "ControleEstoque.Api.Controllers.RelatoriosController",
+    "Method": "GetVendasAgrupadasPorDia",
+    "RelativePath": "api/Relatorios/vendas/pordia",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ControleEstoque.Api.Controllers.RelatoriosController",
+    "Method": "GetVendasAgrupadasPorMes",
+    "RelativePath": "api/Relatorios/vendas/pormes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ControleEstoque.Api.Controllers.RelatoriosController",
+    "Method": "GetTop5Clientes",
+    "RelativePath": "api/Relatorios/vendas/top5clientes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ControleEstoque.Api.Controllers.RelatoriosController",
+    "Method": "GetTop5ProdutosMaisVendidos",
+    "RelativePath": "api/Relatorios/vendas/top5produtos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "ControleEstoque.Api.Controllers.UsersController",

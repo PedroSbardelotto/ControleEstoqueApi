@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic; // Adicionar este using
+﻿using System.Collections.Generic;
 
 namespace ControleEstoque.Api.Models
 {
@@ -10,7 +10,10 @@ namespace ControleEstoque.Api.Models
         public string Email { get; set; } = string.Empty;
         public string Endereco { get; set; } = string.Empty;
 
-        // Propriedade de Navegação para os Pedidos deste Cliente (virtual)
+       
+        public bool Status { get; set; } = true;
+        
+        
         public virtual ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
     }
 }

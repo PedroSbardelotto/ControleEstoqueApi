@@ -1,20 +1,20 @@
 ﻿using ControleEstoque.Api.Data;
 using ControleEstoque.Api.Models;
-using ControleEstoque.Api.DTOs;
+using ControleEstoque.Api.DTOs; // Necessário para os DTOs
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore; // Necessário para .Include e .Select
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq; // Necessário para .Select e .OrderBy
 using System.Threading.Tasks;
 
 namespace ControleEstoque.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")] // Apenas Admins podem dar entrada em notas
+    [Authorize] // Correto (sem Roles)
     public class NotaFiscalCompraController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -59,7 +59,7 @@ namespace ControleEstoque.Api.Controllers
                     // 2a. Achar o produto no banco
                     var produtoEstoque = await _context.Produtos.FindAsync(itemDto.ProdutoId);
 
-                    // 2b. VALIDAÇÃO (Este é o seu requisito!)
+                    // 2b. VALIDAÇÃO
                     if (produtoEstoque == null)
                     {
                         await transaction.RollbackAsync(); // Desfaz a criação da NF
@@ -88,10 +88,10 @@ namespace ControleEstoque.Api.Controllers
                 // 3. Adicionar todos os itens da NF ao contexto
                 await _context.NotasFiscaisCompraItens.AddRangeAsync(listaItensNF);
 
-                // 4. Salvar as mudanças (Entrada no estoque E criação dos Itens da NF)
+                // 4. Salvar as mudanças
                 await _context.SaveChangesAsync();
 
-                // 5. Se tudo deu certo, "Commita" a transação
+                // 5. Commita a transação
                 await transaction.CommitAsync();
 
                 return CreatedAtAction(nameof(GetNotaFiscalCompra), new { id = novaNF.Id }, novaNF);
@@ -104,6 +104,39 @@ namespace ControleEstoque.Api.Controllers
                 return StatusCode(500, "Erro interno ao processar a Nota Fiscal.");
             }
         }
+
+
+        // --- (BLOCO DE CÓDIGO ADICIONADO - Backlog Item 2.1) ---
+        // GET: api/notafiscalcompra 
+        [HttpGet]
+        public async Task<ActionResult<List<NotaFiscalListDto>>> GetNotasFiscais()
+        {
+            try
+            {
+                var notas = await _context.NotasFiscaisCompra
+                    .AsNoTracking()
+                    .Include(nf => nf.Fornecedor) // Inclui o Fornecedor para pegar o Nome
+                    .OrderByDescending(nf => nf.DataEmissao)
+                    .Select(nf => new NotaFiscalListDto // Usa o DTO de Lista
+                    {
+                        Id = nf.Id,
+                        NumeroNota = nf.NumeroNota,
+                        NomeFornecedor = nf.Fornecedor.Nome,
+                        DataEmissao = nf.DataEmissao,
+                        ValorTotal = nf.ValorTotal
+                    })
+                    .ToListAsync();
+
+                return Ok(notas);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao buscar a lista de notas fiscais.");
+                return StatusCode(500, "Erro interno do servidor.");
+            }
+        }
+        // --- FIM DO BLOCO ADICIONADO ---
+
 
         // GET (só para o CreatedAtAction funcionar)
         [HttpGet("{id}", Name = "GetNotaFiscalCompra")]

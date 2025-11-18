@@ -27,26 +27,33 @@ namespace ControleEstoque.Api.Controllers
             _logger = logger;
         }
 
-        // GET: api/pedidos (Mostra cabeçalho, cliente, itens e produtos dos itens)
-        [HttpGet]
-        public async Task<ActionResult<List<PedidoListDto>>> GetPedidos()
+        // GET: api/pedidos (Agora aceita ?status=Pendente, etc.)
+        [HttpGet]
+        public async Task<ActionResult<List<PedidoListDto>>> GetPedidos([FromQuery] string? status)
         {
             try
             {
-                var pedidos = await _context.Pedidos
-                                    .Include(p => p.Cliente)
-                                    .Include(p => p.PedidoItens)
-                                    .AsNoTracking()
-                                    .ToListAsync();
+                // 1. Começa a query (IQueryable)
+                var query = _context.Pedidos.AsNoTracking();
 
-                var pedidosDto = pedidos.Select(p => new PedidoListDto
+                // 2. Aplica o filtro de status, se ele foi fornecido
+                if (!string.IsNullOrWhiteSpace(status))
                 {
-                    Id = p.Id,
-                    DataPedido = p.DataPedido,
-                    // Status = p.Status, // <-- LINHA REMOVIDA
-                    NomeCliente = p.Cliente.Nome,
-                    ValorTotal = p.PedidoItens.Sum(item => item.Quantidade * item.PrecoUnitarioVenda)
-                }).ToList();
+                    query = query.Where(p => p.Status.ToLower() == status.ToLower());
+                }
+
+                // 3. Monta a DTO final
+                var pedidosDto = await query
+                  .OrderByDescending(p => p.DataPedido) // Ordena (mais novos primeiro)
+                                    .Select(p => new PedidoListDto
+                                    {
+                                        Id = p.Id,
+                                        DataPedido = p.DataPedido,
+                                        NomeCliente = p.Cliente != null ? p.Cliente.Nome : "Cliente Excluído",
+                                        ValorTotal = p.PedidoItens.Sum(item => item.Quantidade * item.PrecoUnitarioVenda),
+                                        Status = p.Status // <-- LINHA ADICIONADA
+                                    })
+                  .ToListAsync();
 
                 return Ok(pedidosDto);
             }

@@ -66,7 +66,7 @@ namespace ControleEstoque.Api.Controllers
             // --- FIM DA CORREÇÃO DE SEGURANÇA ---
 
             var token = GenerateJwtToken(user);
-            return Ok(new { token = token });
+            return Ok(new { token = token, role = user.Tipo });
         }
 
         private string GenerateJwtToken(User user)
@@ -80,7 +80,7 @@ namespace ControleEstoque.Api.Controllers
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, user.Tipo)
+                    new Claim("tipo", user.Tipo)
                 }),
                 Expires = DateTime.UtcNow.AddHours(8),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

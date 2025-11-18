@@ -12,5 +12,6 @@ namespace ControleEstoque.Api.DTOs
 
         // O campo calculado que você precisa
         public decimal ValorTotal { get; set; }
+        public string Status { get; set; }
     }
 }

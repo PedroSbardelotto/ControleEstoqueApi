@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControleEstoque.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251111145154_VersaoInicialUnificada")]
-    partial class VersaoInicialUnificada
+    [Migration("20251114002657_CriacaoInicialCompleta")]
+    partial class CriacaoInicialCompleta
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,9 @@ namespace ControleEstoque.Api.Migrations
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -112,7 +115,7 @@ namespace ControleEstoque.Api.Migrations
 
                     b.HasIndex("FornecedorId");
 
-                    b.ToTable("NotaFiscalCompra");
+                    b.ToTable("NotasFiscaisCompra");
                 });
 
             modelBuilder.Entity("ControleEstoque.Api.Models.NotaFiscalCompraItem", b =>
@@ -141,7 +144,7 @@ namespace ControleEstoque.Api.Migrations
 
                     b.HasIndex("ProdutoId");
 
-                    b.ToTable("NotaFiscalCompraItem");
+                    b.ToTable("NotasFiscaisCompraItens");
                 });
 
             modelBuilder.Entity("ControleEstoque.Api.Models.Pedido", b =>

@@ -3,7 +3,7 @@ using ControleEstoque.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging; // 1. ADICIONADO (caso estivesse faltando)
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +17,8 @@ namespace ControleEstoque.Api.Controllers
     public class ClientesController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly ILogger<ClientesController> _logger; // Campo para o Logger
+        private readonly ILogger<ClientesController> _logger;
 
-        // 2. CORRIGIDO: Injetando o AppDbContext E o ILogger
         public ClientesController(AppDbContext context, ILogger<ClientesController> logger)
         {
             _context = context;
@@ -30,11 +29,16 @@ namespace ControleEstoque.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Cliente>>> GetClientes()
         {
-            // 3. ADICIONADO Try/Catch
             try
             {
-                var clientes = await _context.Clientes.ToListAsync();
-                return Ok(clientes); // Retornar Ok() é uma boa prática
+                // --- CORREÇÃO SOFT DELETE ---
+                // Retorna apenas clientes ATIVOS
+                var clientes = await _context.Clientes
+                                        .Where(c => c.Status == true)
+                                        .ToListAsync();
+                // --- FIM DA CORREÇÃO ---
+
+                return Ok(clientes);
             }
             catch (Exception ex)
             {
@@ -47,7 +51,8 @@ namespace ControleEstoque.Api.Controllers
         [HttpGet("{id}", Name = "GetCliente")]
         public async Task<ActionResult<Cliente>> GetCliente(int id)
         {
-            // 4. ADICIONADO Try/Catch
+            // (Este endpoint pode retornar um cliente inativo, o que é útil
+            // para visualização de histórico ou reativação)
             try
             {
                 var cliente = await _context.Clientes.FindAsync(id);
@@ -58,7 +63,7 @@ namespace ControleEstoque.Api.Controllers
                     return NotFound($"Cliente com ID {id} não encontrado.");
                 }
 
-                return Ok(cliente); // Retornar Ok()
+                return Ok(cliente);
             }
             catch (Exception ex)
             {
@@ -71,7 +76,6 @@ namespace ControleEstoque.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Cliente>> CriarCliente([FromBody] Cliente novoCliente)
         {
-            // 5. ADICIONADO Try/Catch
             try
             {
                 if (!ModelState.IsValid)
@@ -79,17 +83,22 @@ namespace ControleEstoque.Api.Controllers
                     return BadRequest(ModelState);
                 }
 
+                // --- CORREÇÃO SOFT DELETE ---
+                // Garante que o novo cliente seja sempre criado como Ativo
+                novoCliente.Status = true;
+                // --- FIM DA CORREÇÃO ---
+
                 await _context.Clientes.AddAsync(novoCliente);
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction(nameof(GetCliente), new { id = novoCliente.Id }, novoCliente);
             }
-            catch (DbUpdateException ex) // Erro específico ao salvar (ex: CNPJ duplicado, se fosse único)
+            catch (DbUpdateException ex)
             {
                 _logger.LogError(ex, "Erro ao salvar novo cliente no banco.");
                 return StatusCode(500, "Erro ao salvar cliente. Verifique os dados.");
             }
-            catch (Exception ex) // Erro genérico
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Erro inesperado ao criar cliente.");
                 return StatusCode(500, "Erro interno do servidor.");
@@ -100,7 +109,6 @@ namespace ControleEstoque.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> AtualizarCliente(int id, [FromBody] Cliente clienteAtualizado)
         {
-            // 6. ADICIONADO Try/Catch (envolvendo a lógica de concorrência)
             try
             {
                 if (id != clienteAtualizado.Id)
@@ -113,8 +121,30 @@ namespace ControleEstoque.Api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                _context.Entry(clienteAtualizado).State = EntityState.Modified;
+                // --- CORREÇÃO SOFT DELETE (Evita bug de atualização cega) ---
+
+                // 1. Busca o cliente original do banco
+                var clienteDoBanco = await _context.Clientes.FindAsync(id);
+
+                if (clienteDoBanco == null)
+                {
+                    _logger.LogWarning($"Tentativa de atualizar cliente ID {id} que não foi encontrado.");
+                    return NotFound($"Cliente com ID {id} não encontrado para atualização.");
+                }
+
+                // 2. Copia apenas os dados que podem ser alterados
+                clienteDoBanco.Nome = clienteAtualizado.Nome;
+                clienteDoBanco.CNPJ = clienteAtualizado.CNPJ;
+                clienteDoBanco.Email = clienteAtualizado.Email;
+                clienteDoBanco.Endereco = clienteAtualizado.Endereco;
+
+                // O 'clienteDoBanco.Status' (que é 'true') é preservado.
+                // O 'clienteAtualizado.Status' (potencialmente 'false') é ignorado.
+
+                // 3. Salva o objeto lido do banco, agora modificado
                 await _context.SaveChangesAsync();
+
+                // --- FIM DA CORREÇÃO ---
 
                 return NoContent();
             }
@@ -122,6 +152,8 @@ namespace ControleEstoque.Api.Controllers
             {
                 if (!_context.Clientes.Any(e => e.Id == id))
                 {
+                    // Este bloco pode ser redundante devido à verificação 'FindAsync' acima,
+                    // mas mantê-lo é seguro.
                     _logger.LogWarning($"Tentativa de atualizar cliente ID {id} que não foi encontrado.");
                     return NotFound($"Cliente com ID {id} não encontrado para atualização.");
                 }
@@ -142,7 +174,6 @@ namespace ControleEstoque.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarCliente(int id)
         {
-            // 7. ADICIONADO Try/Catch
             try
             {
                 var cliente = await _context.Clientes.FindAsync(id);
@@ -152,19 +183,23 @@ namespace ControleEstoque.Api.Controllers
                     return NotFound($"Cliente com ID {id} não encontrado para exclusão.");
                 }
 
-                _context.Clientes.Remove(cliente);
+                // --- CORREÇÃO SOFT DELETE ---
+                // Em vez de remover, definimos o status como inativo
+                cliente.Status = false;
+                // --- FIM DA CORREÇÃO ---
+
                 await _context.SaveChangesAsync();
 
                 return NoContent();
             }
-            catch (DbUpdateException ex) // Captura erros de FK (ex: cliente tem pedidos)
+            catch (DbUpdateException ex) // Este catch agora só será chamado por outros erros de update
             {
-                _logger.LogError(ex, $"Erro ao deletar cliente ID {id} (provável conflito de chave estrangeira com Pedidos).");
-                return StatusCode(500, "Erro ao deletar. O cliente pode estar associado a pedidos existentes.");
+                _logger.LogError(ex, $"Erro ao inativar cliente ID {id}.");
+                return StatusCode(500, "Erro ao inativar o cliente.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Erro inesperado ao deletar cliente ID {id}.");
+                _logger.LogError(ex, $"Erro inesperado ao inativar cliente ID {id}.");
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }

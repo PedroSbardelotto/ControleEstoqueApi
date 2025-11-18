@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ControleEstoque.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class VersaoInicialUnificada : Migration
+    public partial class CriacaoInicialCompleta : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,8 @@ namespace ControleEstoque.Api.Migrations
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CNPJ = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Endereco = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Endereco = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,7 +101,7 @@ namespace ControleEstoque.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "NotaFiscalCompra",
+                name: "NotasFiscaisCompra",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -112,9 +113,9 @@ namespace ControleEstoque.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NotaFiscalCompra", x => x.Id);
+                    table.PrimaryKey("PK_NotasFiscaisCompra", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_NotaFiscalCompra_Fornecedores_FornecedorId",
+                        name: "FK_NotasFiscaisCompra_Fornecedores_FornecedorId",
                         column: x => x.FornecedorId,
                         principalTable: "Fornecedores",
                         principalColumn: "Id",
@@ -150,7 +151,7 @@ namespace ControleEstoque.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "NotaFiscalCompraItem",
+                name: "NotasFiscaisCompraItens",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -162,15 +163,15 @@ namespace ControleEstoque.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NotaFiscalCompraItem", x => x.Id);
+                    table.PrimaryKey("PK_NotasFiscaisCompraItens", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_NotaFiscalCompraItem_NotaFiscalCompra_NotaFiscalCompraId",
+                        name: "FK_NotasFiscaisCompraItens_NotasFiscaisCompra_NotaFiscalCompraId",
                         column: x => x.NotaFiscalCompraId,
-                        principalTable: "NotaFiscalCompra",
+                        principalTable: "NotasFiscaisCompra",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_NotaFiscalCompraItem_Produtos_ProdutoId",
+                        name: "FK_NotasFiscaisCompraItens_Produtos_ProdutoId",
                         column: x => x.ProdutoId,
                         principalTable: "Produtos",
                         principalColumn: "Id",
@@ -178,18 +179,18 @@ namespace ControleEstoque.Api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_NotaFiscalCompra_FornecedorId",
-                table: "NotaFiscalCompra",
+                name: "IX_NotasFiscaisCompra_FornecedorId",
+                table: "NotasFiscaisCompra",
                 column: "FornecedorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NotaFiscalCompraItem_NotaFiscalCompraId",
-                table: "NotaFiscalCompraItem",
+                name: "IX_NotasFiscaisCompraItens_NotaFiscalCompraId",
+                table: "NotasFiscaisCompraItens",
                 column: "NotaFiscalCompraId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_NotaFiscalCompraItem_ProdutoId",
-                table: "NotaFiscalCompraItem",
+                name: "IX_NotasFiscaisCompraItens_ProdutoId",
+                table: "NotasFiscaisCompraItens",
                 column: "ProdutoId");
 
             migrationBuilder.CreateIndex(
@@ -212,7 +213,7 @@ namespace ControleEstoque.Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "NotaFiscalCompraItem");
+                name: "NotasFiscaisCompraItens");
 
             migrationBuilder.DropTable(
                 name: "PedidoItens");
@@ -221,7 +222,7 @@ namespace ControleEstoque.Api.Migrations
                 name: "Usuarios");
 
             migrationBuilder.DropTable(
-                name: "NotaFiscalCompra");
+                name: "NotasFiscaisCompra");
 
             migrationBuilder.DropTable(
                 name: "Pedidos");
