@@ -54,8 +54,7 @@
               "RelativeToolTip": "DTOs\\NotaFiscalXmlDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T00:54:02.343Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-19T00:54:02.343Z"
             },
             {
               "$type": "Document",
@@ -65,7 +64,7 @@
               "RelativeDocumentMoniker": "Controllers\\NotaFiscalCompraController.cs",
               "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\NotaFiscalCompraController.cs",
               "RelativeToolTip": "Controllers\\NotaFiscalCompraController.cs",
-              "ViewState": "AgIAAL8AAAAAAAAAAAAIwPIAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAAFIBAAAAAAAAAAAlwHQBAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-19T00:41:53.291Z",
               "EditorCaption": ""
@@ -80,8 +79,7 @@
               "RelativeToolTip": "DTOs\\NotaFiscalCompraCreateDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T00:42:37.297Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-19T00:42:37.297Z"
             },
             {
               "$type": "Document",
@@ -93,8 +91,7 @@
               "RelativeToolTip": "DTOs\\NotaFiscalCompraListDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T00:42:36.628Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-19T00:42:36.628Z"
             },
             {
               "$type": "Document",
@@ -106,8 +103,7 @@
               "RelativeToolTip": "DTOs\\NotaFiscalItemCreateDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T00:42:35.894Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-19T00:42:35.894Z"
             }
           ]
         }

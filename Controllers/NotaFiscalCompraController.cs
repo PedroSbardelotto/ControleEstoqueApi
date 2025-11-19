@@ -1,22 +1,22 @@
 ﻿using ControleEstoque.Api.Data;
 using ControleEstoque.Api.Models;
-using ControleEstoque.Api.DTOs; // Necessário para os DTOs
+using ControleEstoque.Api.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore; // Necessário para .Include e .Select
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq; // Necessário para .Select e .OrderBy
+using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.IO;
+using System.Xml.Linq; // XML
+using System.Globalization; // Formatação
 
 namespace ControleEstoque.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] // Correto (sem Roles)
+    [Authorize]
     public class NotaFiscalCompraController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -28,88 +28,7 @@ namespace ControleEstoque.Api.Controllers
             _logger = logger;
         }
 
-        // POST: api/notafiscalcompra
-        [HttpPost]
-        public async Task<ActionResult<NotaFiscalCompra>> CriarNotaFiscalCompra([FromBody] NotaFiscalCompraCreateDto nfDto)
-        {
-            if (!ModelState.IsValid || !nfDto.Itens.Any())
-            {
-                return BadRequest("Dados da NF inválidos ou nenhum item fornecido.");
-            }
-
-            // Inicia a Transação
-            await using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            {
-                // 1. Criar o Cabeçalho da NF
-                var novaNF = new NotaFiscalCompra
-                {
-                    FornecedorId = nfDto.FornecedorId,
-                    NumeroNota = nfDto.NumeroNota,
-                    DataEmissao = nfDto.DataEmissao,
-                    ValorTotal = nfDto.Itens.Sum(i => i.PrecoCustoUnitario * i.Quantidade)
-                };
-                await _context.NotasFiscaisCompra.AddAsync(novaNF);
-                // Salva para obter o ID da NF
-                await _context.SaveChangesAsync();
-
-                var listaItensNF = new List<NotaFiscalCompraItem>();
-
-                // 2. Processar cada item da NF
-                foreach (var itemDto in nfDto.Itens)
-                {
-                    // 2a. Achar o produto no banco
-                    var produtoEstoque = await _context.Produtos.FindAsync(itemDto.ProdutoId);
-
-                    // 2b. VALIDAÇÃO
-                    if (produtoEstoque == null)
-                    {
-                        await transaction.RollbackAsync(); // Desfaz a criação da NF
-                        return BadRequest($"Produto com ID {itemDto.ProdutoId} não está cadastrado. Cadastre-o antes.");
-                    }
-
-                    // 2c. ATUALIZA O ESTOQUE (Soma a quantidade)
-                    produtoEstoque.Quantidade += itemDto.Quantidade;
-
-                    // Opcional: Atualiza o Preço de Custo no cadastro do produto
-                    produtoEstoque.PrecoCusto = itemDto.PrecoCustoUnitario;
-
-                    _context.Entry(produtoEstoque).State = EntityState.Modified;
-
-                    // 2d. Criar a linha/item da NF
-                    var novoItemNF = new NotaFiscalCompraItem
-                    {
-                        NotaFiscalCompraId = novaNF.Id, // Linka com o cabeçalho
-                        ProdutoId = itemDto.ProdutoId,
-                        Quantidade = itemDto.Quantidade,
-                        PrecoCustoUnitario = itemDto.PrecoCustoUnitario
-                    };
-                    listaItensNF.Add(novoItemNF);
-                }
-
-                // 3. Adicionar todos os itens da NF ao contexto
-                await _context.NotasFiscaisCompraItens.AddRangeAsync(listaItensNF);
-
-                // 4. Salvar as mudanças
-                await _context.SaveChangesAsync();
-
-                // 5. Commita a transação
-                await transaction.CommitAsync();
-
-                return CreatedAtAction(nameof(GetNotaFiscalCompra), new { id = novaNF.Id }, novaNF);
-            }
-            catch (Exception ex)
-            {
-                // 5b. Se algo falhar, reverte tudo
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, "Erro inesperado ao criar Nota Fiscal de Compra.");
-                return StatusCode(500, "Erro interno ao processar a Nota Fiscal.");
-            }
-        }
-
-
-        // --- (BLOCO DE CÓDIGO ADICIONADO - Backlog Item 2.1) ---
-        // GET: api/notafiscalcompra 
+        // GET: api/notafiscalcompra
         [HttpGet]
         public async Task<ActionResult<List<NotaFiscalListDto>>> GetNotasFiscais()
         {
@@ -117,9 +36,9 @@ namespace ControleEstoque.Api.Controllers
             {
                 var notas = await _context.NotasFiscaisCompra
                     .AsNoTracking()
-                    .Include(nf => nf.Fornecedor) // Inclui o Fornecedor para pegar o Nome
+                    .Include(nf => nf.Fornecedor)
                     .OrderByDescending(nf => nf.DataEmissao)
-                    .Select(nf => new NotaFiscalListDto // Usa o DTO de Lista
+                    .Select(nf => new NotaFiscalListDto
                     {
                         Id = nf.Id,
                         NumeroNota = nf.NumeroNota,
@@ -133,14 +52,12 @@ namespace ControleEstoque.Api.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao buscar a lista de notas fiscais.");
-                return StatusCode(500, "Erro interno do servidor.");
+                _logger.LogError(ex, "Erro ao buscar lista de NFs.");
+                return StatusCode(500, "Erro interno.");
             }
         }
-        // --- FIM DO BLOCO ADICIONADO ---
 
-
-        // GET (só para o CreatedAtAction funcionar)
+        // GET: api/notafiscalcompra/{id}
         [HttpGet("{id}", Name = "GetNotaFiscalCompra")]
         public async Task<ActionResult<NotaFiscalCompra>> GetNotaFiscalCompra(int id)
         {
@@ -155,165 +72,179 @@ namespace ControleEstoque.Api.Controllers
             return Ok(nf);
         }
 
-        // POST: api/notafiscalcompra/uploadxml
-        [HttpPost("UploadXML")]
-        public async Task<ActionResult> UploadXML(IFormFile arquivo)
+        // POST: api/notafiscalcompra (Manual)
+        [HttpPost]
+        public async Task<ActionResult<NotaFiscalCompra>> CriarNotaFiscalCompra([FromBody] NotaFiscalCompraCreateDto nfDto)
         {
-            if (arquivo == null || arquivo.Length == 0)
-                return BadRequest("Arquivo XML não foi enviado.");
+            if (!ModelState.IsValid || !nfDto.Itens.Any())
+                return BadRequest("Dados inválidos.");
 
-            if (!arquivo.FileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
-                return BadRequest("O arquivo deve ser um XML válido.");
-
-            // Inicia a Transação (reutilizando a lógica transacional)
             await using var transaction = await _context.Database.BeginTransactionAsync();
-
             try
             {
-                // 1. Ler o conteúdo do arquivo XML
-                XDocument xmlDoc;
-                using (var stream = arquivo.OpenReadStream())
-                {
-                    xmlDoc = await XDocument.LoadAsync(stream, LoadOptions.None, default);
-                }
-
-                // 2. Extrair dados do XML (NFe padrão brasileiro)
-                var nfeProc = xmlDoc.Root;
-
-                // Namespace padrão da NFe
-                XNamespace nfe = "http://www.portalfiscal.inf.br/nfe";
-
-                // Navega até a tag <infNFe>
-                var infNFe = nfeProc?.Descendants(nfe + "infNFe").FirstOrDefault();
-
-                if (infNFe == null)
-                    return BadRequest("XML inválido: estrutura de NFe não encontrada.");
-
-                // 3. Extrair dados do Cabeçalho da NF
-                var ide = infNFe.Element(nfe + "ide");
-                var emit = infNFe.Element(nfe + "emit");
-                var total = infNFe.Element(nfe + "total")?.Element(nfe + "ICMSTot");
-
-                string numeroNota = ide?.Element(nfe + "nNF")?.Value;
-                string cnpjFornecedor = emit?.Element(nfe + "CNPJ")?.Value;
-                string nomeFornecedor = emit?.Element(nfe + "xNome")?.Value;
-
-                DateTime dataEmissao = DateTime.TryParse(
-                    ide?.Element(nfe + "dhEmi")?.Value,
-                    out var dtEmissao
-                ) ? dtEmissao : DateTime.Now;
-
-                decimal valorTotal = decimal.TryParse(
-                    total?.Element(nfe + "vNF")?.Value,
-                    System.Globalization.NumberStyles.Any,
-                    System.Globalization.CultureInfo.InvariantCulture,
-                    out var vTotal
-                ) ? vTotal : 0;
-
-                // 4. Buscar o fornecedor
-                var fornecedor = await _context.Fornecedores
-                    .FirstOrDefaultAsync(f => f.Cnpj == cnpjFornecedor);
-
-                if (fornecedor == null)
-                {
-                    await transaction.RollbackAsync();
-                    return BadRequest($"Fornecedor com CNPJ {cnpjFornecedor} não está cadastrado. Cadastre-o antes de importar a NF.");
-                }
-
-                // 5. Extrair os itens do XML
-                var detalhes = infNFe.Elements(nfe + "det");
-                var listaItensNF = new List<NotaFiscalCompraItem>();
-                var valorTotalCalculado = 0m;
-
-                // 6. Criar o Cabeçalho da NF
                 var novaNF = new NotaFiscalCompra
                 {
-                    FornecedorId = fornecedor.Id,
-                    NumeroNota = numeroNota,
-                    DataEmissao = dataEmissao,
-                    ValorTotal = valorTotal // Será atualizado depois
+                    FornecedorId = nfDto.FornecedorId,
+                    NumeroNota = nfDto.NumeroNota,
+                    DataEmissao = nfDto.DataEmissao,
+                    ValorTotal = 0 // Será calculado
                 };
                 await _context.NotasFiscaisCompra.AddAsync(novaNF);
-                await _context.SaveChangesAsync(); // Salva para obter o ID
+                await _context.SaveChangesAsync();
 
-                foreach (var det in detalhes)
+                decimal total = 0;
+                foreach (var itemDto in nfDto.Itens)
                 {
-                    var prod = det.Element(nfe + "prod");
-
-                    string codigoProduto = prod?.Element(nfe + "cProd")?.Value;
-                    string nomeProduto = prod?.Element(nfe + "xProd")?.Value;
-
-                    int quantidade = int.TryParse(
-                        prod?.Element(nfe + "qCom")?.Value,
-                        out var qtd
-                    ) ? qtd : 0;
-
-                    decimal precoCusto = decimal.TryParse(
-                        prod?.Element(nfe + "vUnCom")?.Value,
-                        System.Globalization.NumberStyles.Any,
-                        System.Globalization.CultureInfo.InvariantCulture,
-                        out var preco
-                    ) ? preco : 0;
-
-                    // 7. Tentar localizar o produto pelo nome ou código
-                    var produto = await _context.Produtos
-                        .FirstOrDefaultAsync(p =>
-                            p.Nome.ToLower().Contains(nomeProduto.ToLower()) ||
-                            p.Tipo == codigoProduto
-                        );
-
+                    var produto = await _context.Produtos.FindAsync(itemDto.ProdutoId);
                     if (produto == null)
                     {
                         await transaction.RollbackAsync();
-                        return BadRequest($"Produto '{nomeProduto}' (código: {codigoProduto}) não encontrado no sistema. Cadastre-o antes.");
+                        return BadRequest($"Produto ID {itemDto.ProdutoId} não encontrado.");
                     }
 
-                    // 8. ATUALIZA O ESTOQUE
-                    produto.Quantidade += quantidade;
-                    produto.PrecoCusto = precoCusto;
-                    _context.Entry(produto).State = EntityState.Modified;
+                    produto.Quantidade += itemDto.Quantidade;
+                    produto.PrecoCusto = itemDto.PrecoCustoUnitario; // Atualiza custo
 
-                    // 9. Criar a linha/item da NF
-                    var novoItemNF = new NotaFiscalCompraItem
+                    var itemNF = new NotaFiscalCompraItem
+                    {
+                        NotaFiscalCompraId = novaNF.Id,
+                        ProdutoId = itemDto.ProdutoId,
+                        Quantidade = itemDto.Quantidade,
+                        PrecoCustoUnitario = itemDto.PrecoCustoUnitario
+                    };
+                    await _context.NotasFiscaisCompraItens.AddAsync(itemNF);
+                    total += (itemDto.Quantidade * itemDto.PrecoCustoUnitario);
+                }
+
+                novaNF.ValorTotal = total;
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return CreatedAtAction(nameof(GetNotaFiscalCompra), new { id = novaNF.Id }, novaNF);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Erro ao criar NF manual.");
+                return StatusCode(500, "Erro interno.");
+            }
+        }
+
+        // POST: api/notafiscalcompra/uploadxml
+        [HttpPost("UploadXML")]
+        public async Task<ActionResult> UploadXML(IFormFile file) // Mudou de 'arquivo' para 'file' para bater com o JS
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Arquivo XML não enviado.");
+
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                using var stream = file.OpenReadStream();
+                var xml = XDocument.Load(stream);
+                XNamespace ns = "http://www.portalfiscal.inf.br/nfe";
+
+                var infNFe = xml.Descendants(ns + "infNFe").FirstOrDefault();
+                if (infNFe == null) return BadRequest("XML inválido (tag infNFe não encontrada).");
+
+                // 1. DADOS DA NOTA
+                var ide = infNFe.Element(ns + "ide");
+                string nNF = ide?.Element(ns + "nNF")?.Value ?? "S/N";
+                DateTime dhEmi = DateTime.TryParse(ide?.Element(ns + "dhEmi")?.Value, out var d) ? d : DateTime.Now;
+
+                // 2. FORNECEDOR
+                var emit = infNFe.Element(ns + "emit");
+                string cnpjEmit = emit?.Element(ns + "CNPJ")?.Value ?? "";
+                string nomeEmit = emit?.Element(ns + "xNome")?.Value ?? "Fornecedor Desconhecido";
+
+                // Busca ou Cria Fornecedor
+                var fornecedor = await _context.Fornecedores.FirstOrDefaultAsync(f => f.Cnpj == cnpjEmit);
+                if (fornecedor == null)
+                {
+                    fornecedor = new Fornecedor { Nome = nomeEmit, Cnpj = cnpjEmit, Email = "xml@import.com" };
+                    _context.Fornecedores.Add(fornecedor);
+                    await _context.SaveChangesAsync();
+                }
+
+                // 3. CABEÇALHO DA NF
+                var novaNF = new NotaFiscalCompra
+                {
+                    FornecedorId = fornecedor.Id,
+                    NumeroNota = nNF,
+                    DataEmissao = dhEmi,
+                    ValorTotal = 0
+                };
+                _context.NotasFiscaisCompra.Add(novaNF);
+                await _context.SaveChangesAsync();
+
+                // 4. ITENS (PRODUTOS)
+                decimal valorTotalCalculado = 0;
+                var dets = infNFe.Elements(ns + "det");
+
+                foreach (var det in dets)
+                {
+                    var prod = det.Element(ns + "prod");
+                    string xProd = prod?.Element(ns + "xProd")?.Value ?? "Produto XML";
+                    string cProd = prod?.Element(ns + "cProd")?.Value ?? ""; // Código do produto no fornecedor
+
+                    // Ler números (Cuidado com ponto/vírgula)
+                    decimal qCom = decimal.Parse(prod?.Element(ns + "qCom")?.Value ?? "0", CultureInfo.InvariantCulture);
+                    decimal vUnCom = decimal.Parse(prod?.Element(ns + "vUnCom")?.Value ?? "0", CultureInfo.InvariantCulture);
+
+                    // Busca Produto (Pelo nome exato ou código?) 
+                    // Vamos simplificar: Busca pelo nome. Se não achar, cria.
+                    var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.Nome == xProd);
+
+                    if (produto == null)
+                    {
+                        produto = new Produto
+                        {
+                            Nome = xProd,
+                            Tipo = "Importado",
+                            Quantidade = 0,
+                            PrecoCusto = vUnCom,
+                            PrecoVenda = vUnCom * 1.5m // Margem fictícia de 50%
+                        };
+                        _context.Produtos.Add(produto);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    // Atualiza Estoque e Custo
+                    produto.Quantidade += (int)qCom;
+                    produto.PrecoCusto = vUnCom;
+
+                    // Cria Item da NF
+                    var itemNF = new NotaFiscalCompraItem
                     {
                         NotaFiscalCompraId = novaNF.Id,
                         ProdutoId = produto.Id,
-                        Quantidade = quantidade,
-                        PrecoCustoUnitario = precoCusto
+                        Quantidade = (int)qCom,
+                        PrecoCustoUnitario = vUnCom
                     };
-                    listaItensNF.Add(novoItemNF);
-                    valorTotalCalculado += precoCusto * quantidade;
+                    _context.NotasFiscaisCompraItens.Add(itemNF);
+                    valorTotalCalculado += (qCom * vUnCom);
                 }
 
-                // 10. Atualizar valor total (se necessário)
-                if (novaNF.ValorTotal == 0)
-                {
-                    novaNF.ValorTotal = valorTotalCalculado;
-                }
-
-                // 11. Adicionar todos os itens
-                await _context.NotasFiscaisCompraItens.AddRangeAsync(listaItensNF);
+                // Atualiza Total Final
+                novaNF.ValorTotal = valorTotalCalculado;
                 await _context.SaveChangesAsync();
-
-                // 12. Commita a transação
                 await transaction.CommitAsync();
 
-                // 13. Retornar sucesso
+                // Retorno para o Frontend (JSON com resumo)
                 return Ok(new
                 {
-                    mensagem = "XML importado com sucesso!",
-                    numeroNota = numeroNota,
-                    fornecedor = nomeFornecedor,
+                    mensagem = "Importação concluída!",
+                    numeroNota = novaNF.NumeroNota,
+                    fornecedor = fornecedor.Nome,
                     valorTotal = novaNF.ValorTotal,
-                    totalItens = listaItensNF.Count,
-                    notaFiscalId = novaNF.Id
+                    totalItens = dets.Count()
                 });
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "Erro ao processar o arquivo XML da NFe.");
-                return StatusCode(500, $"Erro ao processar XML: {ex.Message}");
+                _logger.LogError(ex, "Erro no UploadXML");
+                return StatusCode(500, "Erro ao processar XML: " + ex.Message);
             }
         }
     }

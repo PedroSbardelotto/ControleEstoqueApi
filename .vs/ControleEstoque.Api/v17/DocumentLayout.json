@@ -1,28 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\controllers\\notafiscalcompracontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:controllers\\notafiscalcompracontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\dtos\\notafiscalxmldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:dtos\\notafiscalxmldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\dtos\\notafiscalitemcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:dtos\\notafiscalitemcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\dtos\\notafiscalcompralistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:dtos\\notafiscalcompralistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|c:\\users\\55519\\source\\repos\\controleestoqueapi\\dtos\\notafiscalcompracreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{858050C7-B7A4-43B8-B7BB-DF0E45D7BCD3}|ControleEstoque.Api.csproj|solutionrelative:dtos\\notafiscalcompracreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -30,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -43,71 +22,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{c9c0ae26-aa77-11d2-b3f0-0000f87570ee}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "NotaFiscalXmlDto.cs",
-              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\DTOs\\NotaFiscalXmlDto.cs",
-              "RelativeDocumentMoniker": "DTOs\\NotaFiscalXmlDto.cs",
-              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\DTOs\\NotaFiscalXmlDto.cs",
-              "RelativeToolTip": "DTOs\\NotaFiscalXmlDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T00:54:02.343Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "NotaFiscalCompraController.cs",
-              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\NotaFiscalCompraController.cs",
-              "RelativeDocumentMoniker": "Controllers\\NotaFiscalCompraController.cs",
-              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\Controllers\\NotaFiscalCompraController.cs",
-              "RelativeToolTip": "Controllers\\NotaFiscalCompraController.cs",
-              "ViewState": "AgIAAL8AAAAAAAAAAAAIwPIAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T00:41:53.291Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "NotaFiscalCompraCreateDto.cs",
-              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\DTOs\\NotaFiscalCompraCreateDto.cs",
-              "RelativeDocumentMoniker": "DTOs\\NotaFiscalCompraCreateDto.cs",
-              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\DTOs\\NotaFiscalCompraCreateDto.cs",
-              "RelativeToolTip": "DTOs\\NotaFiscalCompraCreateDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T00:42:37.297Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "NotaFiscalCompraListDto.cs",
-              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\DTOs\\NotaFiscalCompraListDto.cs",
-              "RelativeDocumentMoniker": "DTOs\\NotaFiscalCompraListDto.cs",
-              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\DTOs\\NotaFiscalCompraListDto.cs",
-              "RelativeToolTip": "DTOs\\NotaFiscalCompraListDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T00:42:36.628Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "NotaFiscalItemCreateDto.cs",
-              "DocumentMoniker": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\DTOs\\NotaFiscalItemCreateDto.cs",
-              "RelativeDocumentMoniker": "DTOs\\NotaFiscalItemCreateDto.cs",
-              "ToolTip": "C:\\Users\\55519\\source\\repos\\ControleEstoqueApi\\DTOs\\NotaFiscalItemCreateDto.cs",
-              "RelativeToolTip": "DTOs\\NotaFiscalItemCreateDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T00:42:35.894Z",
-              "EditorCaption": ""
             }
           ]
         }
