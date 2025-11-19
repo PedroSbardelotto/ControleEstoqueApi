@@ -309,6 +309,22 @@
     "EndpointName": "GetNotaFiscalCompra"
   },
   {
+    "ContainingType": "ControleEstoque.Api.Controllers.NotaFiscalCompraController",
+    "Method": "UploadXML",
+    "RelativePath": "api/NotaFiscalCompra/UploadXML",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "arquivo",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ControleEstoque.Api.Controllers.PedidosController",
     "Method": "GetPedidos",
     "RelativePath": "api/Pedidos",

@@ -533,6 +533,38 @@
         }
       }
     },
+    "/api/NotaFiscalCompra/UploadXML": {
+      "post": {
+        "tags": [
+          "NotaFiscalCompra"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "arquivo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "arquivo": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Pedidos": {
       "get": {
         "tags": [

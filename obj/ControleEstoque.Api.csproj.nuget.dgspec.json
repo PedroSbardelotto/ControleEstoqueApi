@@ -80,6 +80,10 @@
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[8.14.0, )"
+            },
+            "System.Xml.Linq": {
+              "target": "Package",
+              "version": "[3.5.21022.801, )"
             }
           },
           "imports": [
