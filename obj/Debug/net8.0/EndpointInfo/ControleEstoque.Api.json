@@ -409,6 +409,42 @@
       }
     },
     "/api/NotaFiscalCompra": {
+      "get": {
+        "tags": [
+          "NotaFiscalCompra"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotaFiscalListDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotaFiscalListDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotaFiscalListDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "NotaFiscalCompra"
@@ -449,42 +485,6 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotaFiscalCompra"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "NotaFiscalCompra"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/NotaFiscalListDto"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/NotaFiscalListDto"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/NotaFiscalListDto"
-                  }
                 }
               }
             }
@@ -544,14 +544,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "arquivo": {
+                  "file": {
                     "type": "string",
                     "format": "binary"
                   }
                 }
               },
               "encoding": {
-                "arquivo": {
+                "file": {
                   "style": "form"
                 }
               }

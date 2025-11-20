@@ -237,6 +237,26 @@
   },
   {
     "ContainingType": "ControleEstoque.Api.Controllers.NotaFiscalCompraController",
+    "Method": "GetNotasFiscais",
+    "RelativePath": "api/NotaFiscalCompra",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[ControleEstoque.Api.DTOs.NotaFiscalListDto, ControleEstoque.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "ControleEstoque.Api.Controllers.NotaFiscalCompraController",
     "Method": "CriarNotaFiscalCompra",
     "RelativePath": "api/NotaFiscalCompra",
     "HttpMethod": "POST",
@@ -252,26 +272,6 @@
     "ReturnTypes": [
       {
         "Type": "ControleEstoque.Api.Models.NotaFiscalCompra",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "ControleEstoque.Api.Controllers.NotaFiscalCompraController",
-    "Method": "GetNotasFiscais",
-    "RelativePath": "api/NotaFiscalCompra",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.List\u00601[[ControleEstoque.Api.DTOs.NotaFiscalListDto, ControleEstoque.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -317,7 +317,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "arquivo",
+        "Name": "file",
         "Type": "Microsoft.AspNetCore.Http.IFormFile",
         "IsRequired": false
       }
