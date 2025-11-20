@@ -6,32 +6,30 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using ControleEstoque.Api.Models;
-// Adicionar este using para OpenApiReference
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- INÍCIO CORS ---
+// --- INICIO CORS ---
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
         policy =>
         {
             policy.AllowAnyOrigin()   // Permite qualquer origem
-                  .AllowAnyHeader()   // Permite cabeçalhos
-                  .AllowAnyMethod();  // Permite métodos
+                  .AllowAnyHeader()   // Permite cabecalhos
+                  .AllowAnyMethod();  // Permite metodos
         });
 });
 // --- FIM CORS ---
 
-// --- Configuração do Banco de Dados ---
+// --- Configuracao do Banco de Dados (PostgreSQL) ---
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString)); // Configurado para SQL Server
-// --- FIM Configuração do Banco de Dados ---
+    options.UseNpgsql(connectionString)); // Configurado para PostgreSQL
+// --- FIM Configuracao do Banco de Dados ---
 
-
-// --- Configuração de Autenticação JWT ---
+// --- Configuracao de Autenticacao JWT ---
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -49,13 +47,12 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false
     };
 });
-// --- FIM Configuração de Autenticação JWT ---
+// --- FIM Configuracao de Autenticacao JWT ---
 
-
-// --- Configuração do Swagger para entender JWT ---
+// --- Configuracao do Swagger para entender JWT ---
 builder.Services.AddSwaggerGen(options =>
 {
-    // 1. Define o esquema de segurança
+    // 1. Define o esquema de seguranca
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -63,10 +60,9 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Insira 'Bearer' [espaço] e então o seu token no campo abaixo.\n\nExemplo: \"Bearer 12345abcdef\""
+        Description = "Insira 'Bearer' [espaco] e entao o seu token no campo abaixo.\n\nExemplo: \"Bearer 12345abcdef\""
     });
-
-    // 2. Adiciona a exigência de autorização
+    // 2. Adiciona a exigencia de autorizacao
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -85,25 +81,21 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-// --- FIM Configuração do Swagger ---
-
+// --- FIM Configuracao do Swagger ---
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        // Esta opção diz ao serializador para ignorar ciclos
+        // Esta opcao diz ao serializador para ignorar ciclos
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
+
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddEndpointsApiExplorer();
 
-
 var app = builder.Build();
 
-// --- BLOCO DE SEED AUTOMÁTICO REMOVIDO ---
-
-
-// Configura o pipeline de requisições HTTP.
+// Configura o pipeline de requisicoes HTTP.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -115,5 +107,4 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
 app.Run();

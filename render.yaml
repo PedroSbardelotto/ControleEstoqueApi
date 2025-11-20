@@ -1,0 +1,27 @@
+﻿services:
+  - type: web
+    name: estoque-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    region: sao-paulo
+    plan: free
+    envVars:
+      - key: ConnectionStrings__DefaultConnection
+        scope: run
+        value: ${DATABASE_URL}
+      - key: JwtSettings__SecretKey
+        scope: run
+        value: wN9rZ+L8sK/mJpQeE5vG7yT3dF6jA1cHlR2xU4iZ0oSbDhV7kMoPt=nWg@sXvI+B
+      - key: ASPNETCORE_ENVIRONMENT
+        scope: run
+        value: Production
+
+  - type: pserv
+    name: estoque-db
+    runtime: postgres15
+    region: sao-paulo
+    plan: free
+    ipAllowList: []
+    databaseName: estoque_db
+    user: estoque_user
+    postgresMajorVersion: 15
