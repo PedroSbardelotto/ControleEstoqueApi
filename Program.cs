@@ -95,6 +95,22 @@ builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        // Isso aplica as migrations pendentes no banco de dados
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Um erro ocorreu ao migrar o banco de dados.");
+    }
+}
+
 // Configura o pipeline de requisicoes HTTP.
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
