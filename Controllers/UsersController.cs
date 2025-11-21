@@ -9,7 +9,7 @@ namespace ControleEstoque.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    // [Authorize] // Deixado comentado para você poder criar o primeiro Admin
+    [Authorize] // Deixado comentado para você poder criar o primeiro Admin
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;
