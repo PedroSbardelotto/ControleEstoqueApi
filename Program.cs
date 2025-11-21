@@ -96,7 +96,7 @@ builder.Services.AddEndpointsApiExplorer();
 var app = builder.Build();
 
 // Configura o pipeline de requisicoes HTTP.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
